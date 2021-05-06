@@ -15,6 +15,13 @@ Project{
             'src/main.cpp',
             'src/ofApp.cpp',
             'src/ofApp.h',
+            'src/Node.cpp',
+            'src/Node.h',
+            'src/Osc.cpp',
+            'src/Osc.h',
+            'src/OscMapper.cpp',
+            'src/OscMapper.h',
+            'src/types.h',
         ]
 
         of.addons: [

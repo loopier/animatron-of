@@ -3,6 +3,7 @@
 
 //========================================================================
 int main( ){
+    std::locale::global(std::locale("en_US.UTF-8"));
     ofSetupOpenGL(1024,768,OF_WINDOW);			// <-------- setup the GL context
 
     // this kicks off the running of my app
