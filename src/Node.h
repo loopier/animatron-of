@@ -7,38 +7,9 @@
 namespace animatron {
 namespace node {
 
-class Node;
-typedef shared_ptr<Node>        NodePtr;
+typedef shared_ptr<ofNode>      NodePtr;
 typedef vector<NodePtr>         NodeList;
 typedef map<string, NodePtr>    NodeMap;
-
-class Node
-{
-public:
-    Node(string & clipname);
-    Node(string & clipname, float x, float y);
-    virtual ~Node();
-
-    void setName(string & newName);
-    string getName() const;
-
-    void setPosition(float x, float y);
-    void setPosition(Point & p);
-    Point getPosition() const;
-
-    void move(float x, float y);
-    void move(Point & p);
-
-    string log();
-
-    void draw();
-private:
-    // Disable default constructor.  All nodes must have a name.
-    Node();
-
-    string name;
-    Point pos;
-};
 
 /////////// PUBLIC INTERFACE ////////////////////////////
 void drawNodes();
