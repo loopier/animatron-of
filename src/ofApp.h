@@ -25,6 +25,12 @@ public:
     void gotMessage(ofMessage msg);
 
 private:
+    /// \brief osc interface list
+    void help(const animatron::osc::Message & msg);
+    /// \brief log everything
+    void verbose(const animatron::osc::Message & msg);
+    /// \brief only log important messages
+    void silent(const animatron::osc::Message & msg);
     /// \brief list all the node names
     void listNodes(const animatron::osc::Message & msg);
     void listSelectedNodes(const animatron::osc::Message & msg);
@@ -33,12 +39,13 @@ private:
     void deselectNode(const animatron::osc::Message & msg);
     void removeNodes(const animatron::osc::Message & msg);
     void moveNodes(const animatron::osc::Message & msg);
+    void moveNodesTo(const animatron::osc::Message & msg);
 
     /// \brief create a new node with a name
     void newNode(const animatron::osc::Message & msg);
 
-    /// \brief print node info
-    void printNodeInfo(const animatron::osc::Message & msg);
+    /// \brief log node info
+    void logNodeInfo(const animatron::osc::Message & msg);
 
     /// \brief map OSC message to a function in the server
     void mapMessageToFunc(animatron::osc::Message & msg);

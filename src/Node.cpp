@@ -43,10 +43,18 @@ animatron::Point animatron::node::Node::getPosition() const {
     return pos;
 }
 
-string animatron::node::Node::print() {
+void animatron::node::Node::move(float x, float y) {
+    pos += Point(x, y);
+}
+
+void animatron::node::Node::move(Point & p) {
+    pos += p;
+}
+
+string animatron::node::Node::log() {
    string info = "---- " + name + "\n";
    info += "name: " + name + "\n";
-   info += "pos: " + ofToString(pos) + "\n";
+   info += "x: " + ofToString(int(pos.x)) + " y: " + ofToString(int(pos.y)) + "\n";
    ofLog() << info;
    return info;
 }
@@ -155,31 +163,58 @@ void animatron::node::remove(string name) {
 //-------------------------------------------------------
 void animatron::node::moveNodes(float x, float y) {
     for(auto node : selectedNodes) {
-        nodes[node]->setPosition(x * ofGetWidth(), y * ofGetHeight());
+        move(node, x, y);
+    }
+}
+
+//-------------------------------------------------------
+void animatron::node::moveNodesTo(float x, float y) {
+    for(auto node : selectedNodes) {
+        moveTo(node, x, y);
     }
 }
 
 //-------------------------------------------------------
 void animatron::node::move(string name, float x, float y) {
-    getByName(name)->setPosition(x,y);
+    getByName(name)->move(x * ofGetWidth(),y * ofGetHeight());
+}
+
+//-------------------------------------------------------
+void animatron::node::moveTo(string name, float x, float y) {
+    getByName(name)->setPosition(x * ofGetWidth(), y * ofGetHeight());
 }
 
 //-------------------------------------------------------
 void animatron::node::select(string name) {
+    if(exists(name) == false) {
+        ofLogError() << "Can't select a node that doesn't exist";
+        return;
+    }
+    ofLogVerbose() << "Added to selection: " << name;
     selectedNodes.push_back(name);
+    listSelectedNodes();
 }
 
 //-------------------------------------------------------
 void animatron::node::deselect(string name) {
+    ofLogVerbose() << "Removed from selection: " << name;
     vector<string>::iterator it;
     it = std::find(selectedNodes.begin(), selectedNodes.end(), name);
     if(it != selectedNodes.end()) selectedNodes.erase(it);
+    listSelectedNodes();
 }
 
 //-------------------------------------------------------
-void animatron::node::print(string name) {
+void animatron::node::logNodes() {
+    for(auto node : selectedNodes) {
+        log(node);
+    }
+}
+
+//-------------------------------------------------------
+void animatron::node::log(string name) {
     if(exists(name)) {
-        getByName(name)->print();
+        getByName(name)->log();
     } else {
         ofLog() << "Node not found: " << name;
     }

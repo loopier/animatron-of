@@ -11,15 +11,19 @@ void ofApp::setup(){
     osc.setup();
     ofAddListener(osc.newOscMessageEvent, this, &ofApp::mapMessageToFunc);
 
-    messageMap["/nodes"] = &ofApp::listNodes;
+    messageMap["/help"] = &ofApp::help;
+    messageMap["/verbose"] = &ofApp::verbose;
+    messageMap["/silent"] = &ofApp::silent;
+
+    messageMap["/new"] = &ofApp::newNode;
+    messageMap["/remove"] = &ofApp::removeNodes;
+    messageMap["/list"] = &ofApp::listNodes;
     messageMap["/selected"] = &ofApp::listSelectedNodes;
+    messageMap["/info"] = &ofApp::logNodeInfo;
     messageMap["/select"] = &ofApp::selectNode;
     messageMap["/deselect"] = &ofApp::deselectNode;
-    messageMap["/remove"] = &ofApp::removeNodes;
     messageMap["/move"] = &ofApp::moveNodes;
-
-    messageMap["/node/info"] = &ofApp::printNodeInfo;
-    messageMap["/node/new"] = &ofApp::newNode;
+    messageMap["/moveto"] = &ofApp::moveNodesTo;
 }
 
 //--------------------------------------------------------------
@@ -39,7 +43,7 @@ void ofApp::mapMessageToFunc(animatron::osc::Message & msg) {
     map<string, mappedFunc>::iterator iter = messageMap.find(msg.getAddress());
     if (iter != messageMap.end()) {
         (this->*(iter->second))(msg); // call the processor method for this message
-//        animatron::osc::printMessage(msg);
+//        animatron::osc::logMessage(msg);
     } else {
         ofLogError() << "Unhandled OSC message: " << msg.getAddress();
     }
@@ -101,6 +105,26 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 }
 
 //--------------------------------------------------------------
+void ofApp::help(const animatron::osc::Message & msg) {
+    vector<string> oscMessages;
+    ofLog() << "------- OSC INTERFACE";
+    for(const auto &item : messageMap) {
+        oscMessages.push_back(item.first);
+        ofLog() << item.first;
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::verbose(const animatron::osc::Message & msg) {
+   ofSetLogLevel(OF_LOG_VERBOSE);
+}
+
+//--------------------------------------------------------------
+void ofApp::silent(const animatron::osc::Message & msg) {
+   ofSetLogLevel(OF_LOG_NOTICE);
+}
+
+//--------------------------------------------------------------
 void ofApp::listNodes(const animatron::osc::Message & msg) {
     animatron::node::listNodes();
 }
@@ -114,7 +138,7 @@ void ofApp::listSelectedNodes(const animatron::osc::Message & msg) {
 void ofApp::selectNode(const animatron::osc::Message & msg) {
     string name = msg.getArgAsString(0);
     animatron::node::select(name);
-    animatron::node::print(name);
+    animatron::node::log(name);
 }
 
 //--------------------------------------------------------------
@@ -125,12 +149,24 @@ void ofApp::deselectNode(const animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::removeNodes(const animatron::osc::Message & msg) {
-    animatron::node::removeNodes();
+    ofLog() << "--- Nodes info\n";
+    if(msg.getNumArgs() == 0) {
+        animatron::node::removeNodes();
+    } else {
+        for(int i = 0; i < msg.getNumArgs(); i++) {
+            animatron::node::remove(msg.getArgAsString(i));
+        }
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::moveNodes(const animatron::osc::Message & msg) {
     animatron::node::moveNodes(msg.getArgAsFloat(0), msg.getArgAsFloat(1));
+}
+
+//--------------------------------------------------------------
+void ofApp::moveNodesTo(const animatron::osc::Message & msg) {
+    animatron::node::moveNodesTo(msg.getArgAsFloat(0), msg.getArgAsFloat(1));
 }
 
 //--------------------------------------------------------------
@@ -148,6 +184,13 @@ void ofApp::newNode(const animatron::osc::Message & msg) {
 }
 
 //--------------------------------------------------------------
-void ofApp::printNodeInfo(const animatron::osc::Message & msg) {
-    animatron::node::print(msg.getArgAsString(0));
+void ofApp::logNodeInfo(const animatron::osc::Message & msg) {
+    ofLog() << "--- Nodes info\n";
+    if(msg.getNumArgs() == 0) {
+        animatron::node::logNodes();
+    } else {
+        for(int i = 0; i < msg.getNumArgs(); i++) {
+            animatron::node::log(msg.getArgAsString(i));
+        }
+    }
 }

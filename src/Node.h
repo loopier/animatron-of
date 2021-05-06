@@ -26,7 +26,10 @@ public:
     void setPosition(Point & p);
     Point getPosition() const;
 
-    string print();
+    void move(float x, float y);
+    void move(Point & p);
+
+    string log();
 
     void draw();
 private:
@@ -66,14 +69,18 @@ void remove(string name);
 
 /// \brief move selected nodes
 void moveNodes(float x, float y);
+/// \brief move selected nodes to a position
+void moveNodesTo(float x, float y);
 /// \brief move node by name
 void move(string name, float x, float y);
+void moveTo(string name, float x, float y);
 
 void select(string name);
 void deselect(string name);
 
 /// \brief Prints node's values
-void print(string name);
+void logNodes();
+void log(string name);
 
 }
 }
