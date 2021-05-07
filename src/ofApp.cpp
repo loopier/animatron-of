@@ -4,8 +4,9 @@
 void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
 
-//    animatron::NodePtr node;
-//    node = make_shared<animatron::Node>();
+    ofEnableDepthTest();
+    cam.enableMouseInput();
+    cam.enableOrtho();
 
     // setup OSC mapper
     osc.setup();
@@ -24,6 +25,10 @@ void ofApp::setup(){
     messageMap["/deselect"] = &ofApp::deselectNode;
     messageMap["/move"] = &ofApp::moveNodes;
     messageMap["/moveto"] = &ofApp::moveNodesTo;
+    messageMap["/rotate"] = &ofApp::rotateNodes;
+    messageMap["/scale"] = &ofApp::scaleNodes;
+
+    messageMap["/ortho"] = &ofApp::toggleOrthographicCamera;
 }
 
 //--------------------------------------------------------------
@@ -33,7 +38,11 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    cam.begin();
+    ofEnableDepthTest();
     animatron::node::drawNodes();
+    ofDisableDepthTest();
+    cam.end();
 }
 
 
@@ -51,7 +60,11 @@ void ofApp::mapMessageToFunc(animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    switch(key) {
+      case 'o':
+            cam.getOrtho() ? cam.disableOrtho() : cam.enableOrtho();
+            break;
+    }
 }
 
 //--------------------------------------------------------------
@@ -161,12 +174,46 @@ void ofApp::removeNodes(const animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::moveNodes(const animatron::osc::Message & msg) {
-    animatron::node::moveNodes(msg.getArgAsFloat(0), msg.getArgAsFloat(1));
+    if(msg.getNumArgs() == 2) {
+        animatron::node::moveNodes(msg.getArgAsFloat(0), msg.getArgAsFloat(1));
+    } else if(msg.getNumArgs() == 3) {
+        animatron::node::move(msg.getArgAsString(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
+    } else {
+        ofLogError()<<"Wrong number of arguments.  Expected 2 or 3.  Given: "<<msg.getNumArgs();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::moveNodesTo(const animatron::osc::Message & msg) {
-    animatron::node::moveNodesTo(msg.getArgAsFloat(0), msg.getArgAsFloat(1));
+    if(msg.getNumArgs() == 2) {
+        animatron::node::moveNodesTo(msg.getArgAsFloat(0), msg.getArgAsFloat(1));
+    } else if(msg.getNumArgs() == 3) {
+        animatron::node::moveTo(msg.getArgAsString(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
+    } else {
+        ofLogError()<<"Wrong number of arguments.  Expected 2 or 3.  Given: "<<msg.getNumArgs();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::rotateNodes(const animatron::osc::Message &msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::rotateNodes(msg.getArgAsFloat(0));
+    } else if(msg.getNumArgs() == 2) {
+        animatron::node::rotate(msg.getArgAsString(0), msg.getArgAsFloat(1));
+    } else {
+        ofLogError()<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::scaleNodes(const animatron::osc::Message &msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::scaleNodes(msg.getArgAsFloat(0));
+    } else if(msg.getNumArgs() == 2) {
+        animatron::node::scale(msg.getArgAsString(0), msg.getArgAsFloat(1));
+    } else {
+        ofLogError()<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
+    }
 }
 
 //--------------------------------------------------------------
@@ -179,7 +226,7 @@ void ofApp::newNode(const animatron::osc::Message & msg) {
                     msg.getArgAsFloat(1),
                     msg.getArgAsFloat(2));
     } else {
-        ofLogError() << "Please provide either 1 or 3 arguments.  Given: " << msg.getNumArgs();
+        ofLogError()<<"Wrong number of arguments.  Expected 1 or 3.  Given: "<<msg.getNumArgs();
     }
 }
 
@@ -193,4 +240,8 @@ void ofApp::logNodeInfo(const animatron::osc::Message & msg) {
             animatron::node::log(msg.getArgAsString(i));
         }
     }
+}
+
+void ofApp::toggleOrthographicCamera(const animatron::osc::Message & msg) {
+    cam.getOrtho() ? cam.disableOrtho() : cam.enableOrtho();
 }

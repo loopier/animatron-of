@@ -41,10 +41,10 @@ bool animatron::node::exists(string & name) {
 animatron::node::NodePtr animatron::node::getByName(string & name) {
     NodePtr node;
     if(exists(name)) {
-        ofLogVerbose() << "Existing node: " << name;
+//        ofLogVerbose() << "Existing node: " << name;
         node = nodes.find(name)->second;
     } else {
-        ofLogVerbose() << "Asking for a node that didn't exist.  Creating new: " << name;
+        ofLogVerbose() << "Asking for a node that doesn't exist.  Creating new: " << name;
         node = create(name);
     }
     return node;
@@ -92,6 +92,7 @@ void animatron::node::remove(string name) {
 void animatron::node::moveNodes(float x, float y) {
     for(auto node : selectedNodes) {
         move(node, x, y);
+        ofLogVerbose()<<"moving "<<node<<" to "<<x<<", "<<y;
     }
 }
 
@@ -99,6 +100,7 @@ void animatron::node::moveNodes(float x, float y) {
 void animatron::node::moveNodesTo(float x, float y) {
     for(auto node : selectedNodes) {
         moveTo(node, x, y);
+        ofLogVerbose()<<"moving "<<node<<" to "<<x<<", "<<y;
     }
 }
 
@@ -110,6 +112,30 @@ void animatron::node::move(string name, float x, float y) {
 //-------------------------------------------------------
 void animatron::node::moveTo(string name, float x, float y) {
     getByName(name)->setPosition(x * ofGetWidth(), y * ofGetHeight(), 0);
+}
+
+//-------------------------------------------------------
+void animatron::node::rotateNodes(float a) {
+    for(auto node : selectedNodes) {
+        getByName(node)->rollRad(a);
+    }
+}
+
+//-------------------------------------------------------
+void animatron::node::rotate(string name, float a) {
+    getByName(name)->rollRad(a);
+}
+
+//-------------------------------------------------------
+void animatron::node::scaleNodes(float s) {
+    for(auto node : selectedNodes) {
+        getByName(node)->setScale(s);
+    }
+}
+
+//-------------------------------------------------------
+void animatron::node::scale(string name, float s) {
+    getByName(name)->setScale(s);
 }
 
 //-------------------------------------------------------

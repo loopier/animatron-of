@@ -46,6 +46,12 @@ void moveNodesTo(float x, float y);
 void move(string name, float x, float y);
 void moveTo(string name, float x, float y);
 
+void rotateNodes(float a);
+void rotate(string name, float a);
+
+void scaleNodes(float s);
+void scale(string name, float s);
+
 void select(string name);
 void deselect(string name);
 

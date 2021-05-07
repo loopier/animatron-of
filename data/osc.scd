@@ -5,6 +5,35 @@ n.sendMsg("/help");
 n.sendMsg("/verbose");
 n.sendMsg("/silent");
 
+(
+o = Array.fill(4, {|i| "alo"++i});
+o.do{|obj| n.sendMsg("/new", obj, 0.5.rand/2+0.5, 0.5.rand/2+0.5)};
+)
+
+n.sendMsg("/ortho");
+
+(
+o.do{|obj,i|
+	n.sendMsg("/select", obj );
+	n.sendMsg("/moveto", 0.5.rand/2+0.25, 0.5.rand/2+0.25);
+	n.sendMsg("/deselect", obj );
+};
+)
+(
+o.do{|obj,i|
+	n.sendMsg("/select", obj );
+	n.sendMsg("/rotate", 1.0.rand2);
+	n.sendMsg("/deselect", obj );
+};
+)
+(
+o.do{|obj,i|
+	n.sendMsg("/select", obj );
+	n.sendMsg("/scale", 1.0.rand2);
+	n.sendMsg("/deselect", obj );
+};
+)
+
 n.sendMsg("/new", "alo");
 n.sendMsg("/new", "olo", 0.3, 0.8);
 n.sendMsg("/new", "ilo", 1.0.rand, 1.0.rand);
@@ -16,7 +45,9 @@ n.sendMsg("/select", "ilo");
 n.sendMsg("/selected");
 n.sendMsg("/remove", "ilo");
 n.sendMsg("/moveto", 1.0.rand,1.0.rand);
-n.sendMsg("/move", 0.1.rand2,0.1.rand2);
+n.sendMsg("/move", "alo1", 0.1.rand2,0.1.rand2);
+n.sendMsg("/moveto", "alo1", 0.5.rand/2+0.5,0.5.rand/2+0.5);
+n.sendMsg("/rotate", "alo1", 1.0.rand);
 n.sendMsg("/deselect", "ilo");
 (
 Tdef(\a, {

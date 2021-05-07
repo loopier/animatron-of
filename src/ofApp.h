@@ -40,6 +40,10 @@ private:
     void removeNodes(const animatron::osc::Message & msg);
     void moveNodes(const animatron::osc::Message & msg);
     void moveNodesTo(const animatron::osc::Message & msg);
+    void rotateNodes(const animatron::osc::Message & msg);
+    void scaleNodes(const animatron::osc::Message & msg);
+
+    void toggleOrthographicCamera(const animatron::osc::Message & msg);
 
     /// \brief create a new node with a name
     void newNode(const animatron::osc::Message & msg);
@@ -55,4 +59,5 @@ private:
 
     animatron::node::NodeMap nodes;
     animatron::osc::OscManager osc;
+    ofEasyCam cam;
 };

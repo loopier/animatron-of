@@ -80,7 +80,7 @@ void animatron::osc::printMessage(const animatron::osc::Message& m, const string
     string msg = prepend + "\t";
     msg += animatron::osc::getPrintableMessage(m);
     
-    ofLogVerbose() << msg;
+    ofLogVerbose()<<"osc: "<<msg;
 }
 
 string animatron::osc::getPrintableMessage(const animatron::osc::Message& m)
@@ -106,7 +106,8 @@ string animatron::osc::getPrintableMessage(const animatron::osc::Message& m)
             msg += "unknown";
         }
         
-        msg += "\t";
+//        msg += "\t";
+        if(i < m.getNumArgs()-1) msg += ", ";
     }
     
     return msg;
