@@ -19,8 +19,8 @@ Project{
             'src/Node.h',
             'src/Osc.cpp',
             'src/Osc.h',
-            'src/OscMapper.cpp',
-            'src/OscMapper.h',
+//            'src/OscMapper.cpp',
+//            'src/OscMapper.h',
             'src/types.h',
         ]
 
