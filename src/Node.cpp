@@ -67,7 +67,7 @@ animatron::node::NodePtr animatron::node::create(string name, float x, float y) 
     if (exists(name)) {
         node = getByName(name);
     } else {
-        node = make_shared<ofNode>(ofNode());
+        node = make_shared<Node>(Node());
         nodes[name] = node;
         node->setPosition(x * ofGetWidth(), y * ofGetHeight(), float(0.0));
     }

@@ -7,9 +7,11 @@
 namespace animatron {
 namespace node {
 
-typedef shared_ptr<ofNode>      NodePtr;
+typedef ofPlanePrimitive Node;
+typedef shared_ptr<Node>      NodePtr;
 typedef vector<NodePtr>         NodeList;
 typedef map<string, NodePtr>    NodeMap;
+
 
 /////////// PUBLIC INTERFACE ////////////////////////////
 void drawNodes();

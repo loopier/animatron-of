@@ -7,7 +7,7 @@ n.sendMsg("/silent");
 
 (
 o = Array.fill(4, {|i| "alo"++i});
-o.do{|obj| n.sendMsg("/new", obj, 0.5.rand/2+0.5, 0.5.rand/2+0.5)};
+o.do{|obj| n.sendMsg("/new", obj, 0.5.rand2+0.5, 0.5.rand2+0.5)};
 )
 
 n.sendMsg("/ortho");
@@ -15,24 +15,14 @@ n.sendMsg("/ortho");
 (
 o.do{|obj,i|
 	n.sendMsg("/select", obj );
-	n.sendMsg("/moveto", 0.5.rand/2+0.25, 0.5.rand/2+0.25);
-	n.sendMsg("/deselect", obj );
-};
-)
-(
-o.do{|obj,i|
-	n.sendMsg("/select", obj );
+	n.sendMsg("/moveto", 0.5.rand2+0.5, 0.5.rand2+0.5);
 	n.sendMsg("/rotate", 1.0.rand2);
+	n.sendMsg("/scale", rrand(0.2,2.0));
 	n.sendMsg("/deselect", obj );
 };
 )
-(
-o.do{|obj,i|
-	n.sendMsg("/select", obj );
-	n.sendMsg("/scale", 1.0.rand2);
-	n.sendMsg("/deselect", obj );
-};
-)
+
+o.do{|obj| n.sendMsg("/select", obj)}; n.sendMsg("/remove");
 
 n.sendMsg("/new", "alo");
 n.sendMsg("/new", "olo", 0.3, 0.8);
