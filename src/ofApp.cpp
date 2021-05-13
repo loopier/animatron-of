@@ -7,6 +7,7 @@ void ofApp::setup(){
     ofEnableDepthTest();
     cam.enableMouseInput();
     cam.enableOrtho();
+//    ofLogVerbose()<<"cam pos: "<<cam.getPosition();
 
     // setup MIDI
     // open port
@@ -252,7 +253,8 @@ void ofApp::setTexture(const animatron::osc::Message &msg) {
 //--------------------------------------------------------------
 void ofApp::newNode(const animatron::osc::Message & msg) {
     if(msg.getNumArgs() == 1) {
-        animatron::node::create(msg.getArgAsString(0), ofRandom(1.0), ofRandom(1.0));
+//        animatron::node::create(msg.getArgAsString(0), ofRandom(1.0), ofRandom(1.0));
+        animatron::node::create(msg.getArgAsString(0));
     } else if (msg.getNumArgs() == 3) {
         animatron::node::create(
                     msg.getArgAsString(0),

@@ -16,10 +16,12 @@ animatron::node::NodeMap animatron::node::getNodes() {
 void animatron::node::drawNodes() {
     for (const auto &item : nodes) {
         if(image::exists(item.first)) {
+//            ofLogVerbose()<<"Drawing nodes with texture";
             image::getByName(item.first)->getTextureForCurrentFrame().bind();
             item.second->draw();
             image::getByName(item.first)->getTextureForCurrentFrame().unbind();
         } else {
+//            ofLogVerbose()<<"Drawing empty nodes";
             item.second->draw();
         }
     }
@@ -52,10 +54,9 @@ bool animatron::node::exists(string & name) {
 animatron::node::NodePtr animatron::node::getByName(string & name) {
     NodePtr node;
     if(exists(name)) {
-//        ofLogVerbose() << "Existing node: " << name;
         node = nodes.find(name)->second;
     } else {
-        ofLogVerbose() << "Asking for a node that doesn't exist.  Creating new: " << name;
+        ofLogVerbose() << "Node not found.  Creating new: " << name;
         node = create(name);
     }
     return node;
@@ -81,6 +82,8 @@ animatron::node::NodePtr animatron::node::create(string name, float x, float y) 
         node = make_shared<Node>(Node());
         nodes[name] = node;
         node->setPosition(x * ofGetWidth(), y * ofGetHeight(), float(0.0));
+//        ofLogVerbose()<<"node pos: "<<node->getPosition();
+//        ofLogVerbose()<<"x: "<<x<<" y: "<<y;
     }
     return node;
 }
