@@ -16,6 +16,7 @@ typedef map<string, NodePtr>    NodeMap;
 
 /////////// PUBLIC INTERFACE ////////////////////////////
 NodeMap getNodes();
+void updateNodes();
 void drawNodes();
 
 vector<string> listNodes();

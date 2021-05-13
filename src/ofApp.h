@@ -71,4 +71,9 @@ private:
     animatron::midi::MessageList midiMessages;
     size_t maxMidiMessages = 10;
     ofEasyCam cam;
+
+    // remove
+    animatron::node::NodePtr anode;
+    animatron::image::ImageSequencePtr aseq;
+    ofTexture tex;
 };

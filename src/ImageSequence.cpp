@@ -66,7 +66,9 @@ animatron::image::ImageSequencePtr animatron::image::getByName(string name) {
     if(exists(name)) {
         sequence = sequences.find(name)->second;
     } else {
-        ofLogVerbose()<<"Asking for a sequence that doesn't exists.  Skipping.";
+        ofLogVerbose()<<"Image sequence not found.  Creating default: "<<name;
+        addSequence(name, "imgs/default");
+        sequence = sequences.find(name)->second;
     }
     return sequence;
 }

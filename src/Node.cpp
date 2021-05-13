@@ -13,6 +13,15 @@ animatron::node::NodeMap animatron::node::getNodes() {
 }
 
 //-------------------------------------------------------
+void animatron::node::updateNodes() {
+    for (const auto &item : nodes) {
+        if(image::exists(item.first)) {
+            image::getByName(item.first)->update();
+        }
+    }
+}
+
+//-------------------------------------------------------
 void animatron::node::drawNodes() {
     for (const auto &item : nodes) {
         if(image::exists(item.first)) {

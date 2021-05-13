@@ -3,11 +3,11 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
+    ofDisableArbTex();
 
     ofEnableDepthTest();
     cam.enableMouseInput();
     cam.enableOrtho();
-//    ofLogVerbose()<<"cam pos: "<<cam.getPosition();
 
     // setup MIDI
     // open port
@@ -47,11 +47,20 @@ void ofApp::setup(){
     messageMap["/ortho"] = &ofApp::toggleOrthographicCamera;
     // image sequence
     messageMap["/animation"] = &ofApp::loadImageSequence;
+
+    anode = make_shared<animatron::node::Node>(animatron::node::Node());
+    anode->setPosition(0.5 * ofGetWidth(),0.5 * ofGetHeight(),0);
+    ofLogVerbose()<<"anode: "<<anode->getPosition();
+    aseq = make_shared<animatron::image::ImageSequence>(animatron::image::ImageSequence());
+    aseq->loadSequence("imgs/mama", 24.0f);
+    aseq->setShouldLoop(true);
+    aseq->play();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+//    aseq->update();
+    animatron::node::updateNodes();
 }
 
 //--------------------------------------------------------------
@@ -61,6 +70,10 @@ void ofApp::draw(){
     animatron::node::drawNodes();
     ofDisableDepthTest();
     cam.end();
+
+//    aseq->getTextureForCurrentFrame().bind();
+//    anode->draw();
+//    aseq->getTextureForCurrentFrame().unbind();
 }
 
 //--------------------------------------------------------------
