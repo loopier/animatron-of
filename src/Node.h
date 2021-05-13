@@ -3,6 +3,7 @@
 
 #include "ofMain.h"
 #include "types.h"
+#include "ImageSequence.h"
 
 namespace animatron {
 namespace node {
@@ -14,6 +15,7 @@ typedef map<string, NodePtr>    NodeMap;
 
 
 /////////// PUBLIC INTERFACE ////////////////////////////
+NodeMap getNodes();
 void drawNodes();
 
 vector<string> listNodes();
@@ -56,6 +58,10 @@ void scale(string name, float s);
 
 void select(string name);
 void deselect(string name);
+
+/// \brief Attach a texture to a node
+void setNodesTexture(string textureName);
+void setTexture(string nodeName, string textureName);
 
 /// \brief Prints node's values
 void logNodes();

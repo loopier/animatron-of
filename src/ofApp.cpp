@@ -11,11 +11,11 @@ void ofApp::setup(){
     // setup OSC mapper
     osc.setup();
     ofAddListener(osc.newOscMessageEvent, this, &ofApp::mapMessageToFunc);
-
+    // app
     messageMap["/help"] = &ofApp::help;
     messageMap["/verbose"] = &ofApp::verbose;
     messageMap["/silent"] = &ofApp::silent;
-
+    // node
     messageMap["/new"] = &ofApp::newNode;
     messageMap["/remove"] = &ofApp::removeNodes;
     messageMap["/list"] = &ofApp::listNodes;
@@ -27,8 +27,11 @@ void ofApp::setup(){
     messageMap["/moveto"] = &ofApp::moveNodesTo;
     messageMap["/rotate"] = &ofApp::rotateNodes;
     messageMap["/scale"] = &ofApp::scaleNodes;
-
+    messageMap["/settexture"] = &ofApp::setTexture;
+    // 3d cam
     messageMap["/ortho"] = &ofApp::toggleOrthographicCamera;
+    // image sequence
+    messageMap["/animation"] = &ofApp::loadImageSequence;
 }
 
 //--------------------------------------------------------------
@@ -217,6 +220,17 @@ void ofApp::scaleNodes(const animatron::osc::Message &msg) {
 }
 
 //--------------------------------------------------------------
+void ofApp::setTexture(const animatron::osc::Message &msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::setNodesTexture(msg.getArgAsString(0));
+    } else if(msg.getNumArgs() == 2) {
+        animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
+    } else {
+        ofLogError()<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
+    }
+}
+
+//--------------------------------------------------------------
 void ofApp::newNode(const animatron::osc::Message & msg) {
     if(msg.getNumArgs() == 1) {
         animatron::node::create(msg.getArgAsString(0), ofRandom(1.0), ofRandom(1.0));
@@ -242,6 +256,12 @@ void ofApp::logNodeInfo(const animatron::osc::Message & msg) {
     }
 }
 
+//--------------------------------------------------------------
 void ofApp::toggleOrthographicCamera(const animatron::osc::Message & msg) {
     cam.getOrtho() ? cam.disableOrtho() : cam.enableOrtho();
+}
+
+//--------------------------------------------------------------
+void ofApp::loadImageSequence(const animatron::osc::Message & msg) {
+    animatron::image::addSequence(msg.getArgAsString(0), msg.getArgAsString(1));
 }

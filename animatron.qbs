@@ -13,19 +13,20 @@ Project{
 
         files: [
             'src/main.cpp',
+//            'src/utils.h',
             'src/ofApp.cpp',
             'src/ofApp.h',
             'src/Node.cpp',
             'src/Node.h',
             'src/Osc.cpp',
             'src/Osc.h',
-//            'src/OscMapper.cpp',
-//            'src/OscMapper.h',
-            'src/types.h',
+            'src/ImageSequence.cpp',
+            'src/ImageSequence.h',
+//            'src/types.h',
         ]
 
         of.addons: [
-            'ofxOpenCv','ofxOsc','ofxXmlSettings'
+            'ofxOpenCv','ofxOsc','ofxXmlSettings','ofxImageSequence','ofxImageSequencePlayback'
         ]
 
         // additional flags for the project. the of module sets some

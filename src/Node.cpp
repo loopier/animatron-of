@@ -1,16 +1,23 @@
 #include "Node.h"
 
 namespace {
-
+// anonymous namespace to hold local variables
 animatron::node::NodeMap nodes;
 vector<string> selectedNodes;
+map<string, animatron::image::ImageSequencePtr> textures;
+}
 
+//-------------------------------------------------------
+animatron::node::NodeMap animatron::node::getNodes() {
+    return nodes;
 }
 
 //-------------------------------------------------------
 void animatron::node::drawNodes() {
     for (const auto &item : nodes) {
+        image::getByName(item.first)->getTextureForCurrentFrame().bind();
         item.second->draw();
+        image::getByName(item.first)->getTextureForCurrentFrame().unbind();
     }
 }
 
@@ -136,6 +143,19 @@ void animatron::node::scaleNodes(float s) {
 //-------------------------------------------------------
 void animatron::node::scale(string name, float s) {
     getByName(name)->setScale(s);
+}
+
+//-------------------------------------------------------
+void animatron::node::setNodesTexture(string textureName) {
+    for(auto node : selectedNodes) {
+        setTexture(node, textureName);
+    }
+}
+
+//-------------------------------------------------------
+void animatron::node::setTexture(string nodeName, string textureName) {
+    ofLogVerbose() << "Setting texture: '"<<textureName<<"' to node '"<<nodeName<<"'";
+    textures[nodeName] = image::getByName(textureName);
 }
 
 //-------------------------------------------------------

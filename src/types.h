@@ -2,7 +2,7 @@
 #define TYPES_H
 
 namespace animatron {
-        typedef ofPoint Point;
+    typedef ofPoint Point;
 }
 
 #endif // TYPES_H

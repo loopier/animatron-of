@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#include "types.h"
 #include "Node.h"
+//#include "ImageSequence.h"
 #include "Osc.h"
 
 class ofApp : public ofBaseApp{
@@ -42,8 +42,11 @@ private:
     void moveNodesTo(const animatron::osc::Message & msg);
     void rotateNodes(const animatron::osc::Message & msg);
     void scaleNodes(const animatron::osc::Message & msg);
+    void setTexture(const animatron::osc::Message & msg);
 
     void toggleOrthographicCamera(const animatron::osc::Message & msg);
+
+    void loadImageSequence(const animatron::osc::Message & msg);
 
     /// \brief create a new node with a name
     void newNode(const animatron::osc::Message & msg);

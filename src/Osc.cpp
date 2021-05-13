@@ -77,7 +77,7 @@ void animatron::osc::OscManager::sendMessage(animatron::osc::Message& m)
 void animatron::osc::printMessage(const animatron::osc::Message& m, const string& prepend, const ofLogLevel& loglevel)
 {
     //    ofLogVerbose() << typeid(this).name() << "::" << __FUNCTION__;
-    string msg = prepend + "\t";
+    string msg = prepend;
     msg += animatron::osc::getPrintableMessage(m);
     
     ofLogVerbose()<<"osc: "<<msg;
