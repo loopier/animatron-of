@@ -15,9 +15,13 @@ animatron::node::NodeMap animatron::node::getNodes() {
 //-------------------------------------------------------
 void animatron::node::drawNodes() {
     for (const auto &item : nodes) {
-        image::getByName(item.first)->getTextureForCurrentFrame().bind();
-        item.second->draw();
-        image::getByName(item.first)->getTextureForCurrentFrame().unbind();
+        if(image::exists(item.first)) {
+            image::getByName(item.first)->getTextureForCurrentFrame().bind();
+            item.second->draw();
+            image::getByName(item.first)->getTextureForCurrentFrame().unbind();
+        } else {
+            item.second->draw();
+        }
     }
 }
 
@@ -63,7 +67,7 @@ animatron::node::NodePtr animatron::node::create(string name) {
     if (exists(name)) {
         node = getByName(name);
     } else {
-        node = create(name, 0.5, 0.5);
+        node = create(name, 0.0, 0.0);
     }
     return node;
 }

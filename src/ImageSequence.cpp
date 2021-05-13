@@ -42,6 +42,7 @@ void animatron::image::addSequence(string name, string path) {
     } else {
         sequence = make_shared<ImageSequence>(ImageSequence());
         sequences[name] = sequence;
+        sequence->loadSequence(path);
         ofLogNotice()<<"Created new image sequence '"<<name<<"' from '"<<path<<"'";
     }
 }

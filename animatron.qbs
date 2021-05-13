@@ -20,13 +20,15 @@ Project{
             'src/Node.h',
             'src/Osc.cpp',
             'src/Osc.h',
+            'src/Midi.cpp',
+            'src/Midi.h',
             'src/ImageSequence.cpp',
             'src/ImageSequence.h',
 //            'src/types.h',
         ]
 
         of.addons: [
-            'ofxOpenCv','ofxOsc','ofxXmlSettings','ofxImageSequence','ofxImageSequencePlayback'
+            'ofxOpenCv','ofxOsc','ofxXmlSettings','ofxImageSequence','ofxImageSequencePlayback','ofxMidi',
         ]
 
         // additional flags for the project. the of module sets some

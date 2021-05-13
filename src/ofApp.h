@@ -4,13 +4,15 @@
 #include "Node.h"
 //#include "ImageSequence.h"
 #include "Osc.h"
+#include "Midi.h"
 
-class ofApp : public ofBaseApp{
+class ofApp : public ofBaseApp, public animatron::midi::MidiListener {
 
 public:
     void setup();
     void update();
     void draw();
+    void exit();
 
     void keyPressed(int key);
     void keyReleased(int key);
@@ -23,6 +25,9 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+
+    /// \brief midi reciever
+    void newMidiMessage(animatron::midi::Message & eventArgs);
 
 private:
     /// \brief osc interface list
@@ -62,5 +67,8 @@ private:
 
     animatron::node::NodeMap nodes;
     animatron::osc::OscManager osc;
+    animatron::midi::MidiIn midiIn;
+    animatron::midi::MessageList midiMessages;
+    size_t maxMidiMessages = 10;
     ofEasyCam cam;
 };

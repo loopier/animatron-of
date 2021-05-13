@@ -8,6 +8,20 @@ void ofApp::setup(){
     cam.enableMouseInput();
     cam.enableOrtho();
 
+    // setup MIDI
+    // open port
+    midiIn.listInPorts();
+//    midiIn.openVirtualPort("ofxMidiIn Input"); // open a virtual port
+//    midiIn.openPort(2); // by number
+    midiIn.openPort("SuperCollider:out0 130:4"); // by name
+    // don't ignore sysex, timing, & active sense messages,
+    // these are ignored by default
+    midiIn.ignoreTypes(false, false, false);
+    // add ofApp as a listener
+    midiIn.addListener(this);
+    // print received messages to the console
+    midiIn.setVerbose(true);
+
     // setup OSC mapper
     osc.setup();
     ofAddListener(osc.newOscMessageEvent, this, &ofApp::mapMessageToFunc);
@@ -48,6 +62,11 @@ void ofApp::draw(){
     cam.end();
 }
 
+//--------------------------------------------------------------
+void ofApp::exit(){
+    midiIn.closePort();
+    midiIn.removeListener(this);
+}
 
 //--------------------------------------------------------------
 void ofApp::mapMessageToFunc(animatron::osc::Message & msg) {
@@ -254,6 +273,19 @@ void ofApp::logNodeInfo(const animatron::osc::Message & msg) {
             animatron::node::log(msg.getArgAsString(i));
         }
     }
+}
+
+//--------------------------------------------------------------
+void ofApp::newMidiMessage(animatron::midi::Message & msg) {
+    midiMessages.push_back(msg);
+
+    // a queue of midi messages
+    while(midiMessages.size() > maxMidiMessages) {
+        midiMessages.erase(midiMessages.begin());
+    }
+
+    // ofxMidiIn.verbose() works better than this
+//    animatron::midi::logMessage(msg);
 }
 
 //--------------------------------------------------------------
