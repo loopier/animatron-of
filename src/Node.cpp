@@ -167,11 +167,22 @@ void animatron::node::setNodesTexture(string textureName) {
 
 //-------------------------------------------------------
 void animatron::node::setTexture(string nodeName, string textureName) {
-    // TODO: change textures from pointer to instance, so they can be independently played.
-    //		Maybe sequences can be pointers, but the sequenceplayer must be an instance.
+    // FIX: this is supposed to create different copies of the ImageSequence objects, not
+    //		just of the pointers, but 'play' seems to affect all instances of the same
+    //		type of ImageSequence.
     ofLogVerbose() << "Setting texture: '"<<textureName<<"' to node '"<<nodeName<<"'";
-    textures[nodeName] = image::getByName(textureName);
-    ofLogVerbose()<<"textures["<<nodeName<<"] = "<<typeid(textures[nodeName]).name();
+//    textures[nodeName] = make_shared<image::ImageSequence>(image::ImageSequence(*image::getByName(textureName)));
+//    textures[nodeName] = make_shared<image::ImageSequence>(image::ImageSequence());
+//    *textures[nodeName] = *image::getByName(textureName);
+//    textures[nodeName] = make_shared<image::ImageSequence>(*image::getByName(textureName));
+    image::ImageSequencePtr original = image::getByName(textureName);
+    textures[nodeName] = make_shared<image::ImageSequence>(image::ImageSequence());
+    *textures[nodeName] = *original;
+//    ofLogVerbose()<<"textures["<<nodeName<<"] = "<<typeid(textures[nodeName]).name();
+    // print memory allocations
+    ofLogVerbose()<<"original mem addr: "<<original.get();
+    ofLogVerbose()<<"node mem addr:     "<<textures[nodeName].get();
+//    printf("(%p, %p)\n", textures[nodeName].get(), image::getByName(textureName).get());
 }
 
 void animatron::node::play(string name) {
@@ -181,8 +192,8 @@ void animatron::node::play(string name) {
 //    ofLogVerbose()<<"texture exists: "<<textures.count(name);
     if(textures.count(name) > 0) {
         textures[name]->play();
-        textures[name]->setShouldLoop(true);
-        ofLogVerbose()<<"playing: "<<textures[name]->isPlaying();
+//        textures[name]->setShouldLoop(true);
+//        ofLogVerbose()<<"playing: "<<textures[name]->isPlaying();
     }
 }
 
@@ -196,70 +207,126 @@ void animatron::node::play() {
 //------------------------------------------------------
 void animatron::node::reverse(string name) {
     ofLogVerbose()<<"reverse: "<<name;
+    if (textures.count(name)) {
+        textures[name]->reverse();
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::reverse() {
-
+    for(auto name : selectedNodes) {
+        reverse(name);
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::pause(string name) {
     ofLogVerbose()<<"pause: "<<name;
+    if (textures.count(name)) {
+        textures[name]->pause();
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::pause() {
-
+    for(auto name : selectedNodes) {
+        pause(name);
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::stop(string name) {
     ofLogVerbose()<<"stop: "<<name;
+    if (textures.count(name)) {
+        textures[name]->stop();
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::stop() {
-
+    for(auto name : selectedNodes) {
+        stop(name);
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::gotoFrame(string name, int frame) {
     ofLogVerbose()<<"goto: "<<frame<<" in: "<<name;
+    if (textures.count(name)) {
+        textures[name]->setCurrentFrameIndex(frame);
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::gotoFrame(int frame) {
+    for(auto name : selectedNodes) {
+        gotoFrame(name, frame);
+    }
 
 }
 
 //------------------------------------------------------
 void animatron::node::setFps(string name, float fps) {
     ofLogVerbose()<<"set fps: "<<fps<<" in: "<<name;
+    if (textures.count(name)) {
+        textures[name]->setFPS(fps);
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::setFps(float fps) {
+    for(auto name : selectedNodes) {
+        setFps(name, fps);
+    }
 
 }
 
 //------------------------------------------------------
 void animatron::node::loop(string name) {
     ofLogVerbose()<<"loop: "<<name;
+    if (textures.count(name)) {
+        textures[name]->setShouldLoop(true);
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::loop() {
+    for(auto name : selectedNodes) {
+        loop(name);
+    }
+
+}
+
+//------------------------------------------------------
+void animatron::node::noloop(string name) {
+    ofLogVerbose()<<"loop: "<<name;
+    if (textures.count(name)) {
+        textures[name]->setShouldLoop(false);
+        textures[name]->setShouldPingPong(false);
+    }
+}
+
+//------------------------------------------------------
+void animatron::node::noloop() {
+    for(auto name : selectedNodes) {
+        noloop(name);
+    }
 
 }
 
 //------------------------------------------------------
 void animatron::node::pingpong(string name) {
     ofLogVerbose()<<"pingpong: "<<name;
+    if (textures.count(name)) {
+        textures[name]->setShouldPingPong(true);
+    }
 }
 
 //------------------------------------------------------
 void animatron::node::pingpong() {
+    for(auto name : selectedNodes) {
+        pingpong(name);
+    }
 
 }
 

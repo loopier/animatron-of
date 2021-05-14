@@ -78,6 +78,8 @@ void setFps(string name, float fps);
 void setFps(float fps);
 void loop(string name);
 void loop();
+void noloop(string name);
+void noloop();
 void pingpong(string name);
 void pingpong();
 

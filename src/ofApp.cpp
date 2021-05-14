@@ -54,6 +54,7 @@ void ofApp::setup(){
     messageMap["/goto"] = &ofApp::gotoFrame;
     messageMap["/fps"] = &ofApp::setNodesFps;
     messageMap["/loop"] = &ofApp::loopNodes;
+    messageMap["/noloop"] = &ofApp::noloopNodes;
     messageMap["/pingpong"] = &ofApp::pingpongNodes;
 }
 
@@ -348,19 +349,19 @@ void ofApp::stopNodes(const animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::gotoFrame(const animatron::osc::Message & msg) {
-    if(msg.getNumArgs() == 1) {
+    if(msg.getNumArgs() == 2) {
         animatron::node::gotoFrame(msg.getArgAsString(0), msg.getArgAsInt(1));
     } else {
-        animatron::node::gotoFrame(msg.getArgAsInt(1));
+        animatron::node::gotoFrame(msg.getArgAsInt(0));
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::setNodesFps(const animatron::osc::Message & msg) {
-    if(msg.getNumArgs() == 1) {
+    if(msg.getNumArgs() == 2) {
         animatron::node::setFps(msg.getArgAsString(0), msg.getArgAsFloat(1));
     } else {
-        animatron::node::setFps(msg.getArgAsFloat(1));
+        animatron::node::setFps(msg.getArgAsFloat(0));
     }
 }
 
@@ -370,6 +371,15 @@ void ofApp::loopNodes(const animatron::osc::Message & msg) {
         animatron::node::loop(msg.getArgAsString(0));
     } else {
         animatron::node::loop();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::noloopNodes(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::noloop(msg.getArgAsString(0));
+    } else {
+        animatron::node::noloop();
     }
 }
 

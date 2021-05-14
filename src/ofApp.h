@@ -59,6 +59,7 @@ private:
     void gotoFrame(const animatron::osc::Message & msg);
     void setNodesFps(const animatron::osc::Message & msg);
     void loopNodes(const animatron::osc::Message & msg);
+    void noloopNodes(const animatron::osc::Message & msg);
     void pingpongNodes(const animatron::osc::Message & msg);
 
     /// \brief create a new node with a name

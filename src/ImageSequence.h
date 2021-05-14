@@ -24,6 +24,7 @@ public:
     ofTexture& getTextureForTime(float time);
     //returns a frame at a given time, used setFrameRate to set time
     ofTexture& getTextureForPercent(float percent);
+
 };
 
 typedef shared_ptr<ImageSequence>      ImageSequencePtr;
