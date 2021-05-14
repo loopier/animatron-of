@@ -64,6 +64,23 @@ void deselect(string name);
 void setNodesTexture(string textureName);
 void setTexture(string nodeName, string textureName);
 
+void play(string name);
+void play();
+void reverse(string name);
+void reverse();
+void pause(string name);
+void pause();
+void stop(string name);
+void stop();
+void gotoFrame(string name, int frame);
+void gotoFrame(int frame);
+void setFps(string name, float fps);
+void setFps(float fps);
+void loop(string name);
+void loop();
+void pingpong(string name);
+void pingpong();
+
 /// \brief Prints node's values
 void logNodes();
 void log(string name);

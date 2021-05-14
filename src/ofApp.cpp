@@ -47,19 +47,18 @@ void ofApp::setup(){
     messageMap["/ortho"] = &ofApp::toggleOrthographicCamera;
     // image sequence
     messageMap["/animation"] = &ofApp::loadImageSequence;
-
-    anode = make_shared<animatron::node::Node>(animatron::node::Node());
-    anode->setPosition(0.5 * ofGetWidth(),0.5 * ofGetHeight(),0);
-    ofLogVerbose()<<"anode: "<<anode->getPosition();
-    aseq = make_shared<animatron::image::ImageSequence>(animatron::image::ImageSequence());
-    aseq->loadSequence("imgs/mama", 24.0f);
-    aseq->setShouldLoop(true);
-    aseq->play();
+    messageMap["/play"] = &ofApp::playNodes;
+    messageMap["/reverse"] = &ofApp::reverseNodes;
+    messageMap["/pause"] = &ofApp::pauseNodes;
+    messageMap["/stop"] = &ofApp::stopNodes;
+    messageMap["/goto"] = &ofApp::gotoFrame;
+    messageMap["/fps"] = &ofApp::setNodesFps;
+    messageMap["/loop"] = &ofApp::loopNodes;
+    messageMap["/pingpong"] = &ofApp::pingpongNodes;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-//    aseq->update();
     animatron::node::updateNodes();
 }
 
@@ -70,10 +69,6 @@ void ofApp::draw(){
     animatron::node::drawNodes();
     ofDisableDepthTest();
     cam.end();
-
-//    aseq->getTextureForCurrentFrame().bind();
-//    anode->draw();
-//    aseq->getTextureForCurrentFrame().unbind();
 }
 
 //--------------------------------------------------------------
@@ -310,5 +305,79 @@ void ofApp::toggleOrthographicCamera(const animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::loadImageSequence(const animatron::osc::Message & msg) {
-    animatron::image::addSequence(msg.getArgAsString(0), msg.getArgAsString(1));
+//    animatron::image::addSequence(msg.getArgAsString(0), msg.getArgAsString(1));
+    animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
+}
+
+//--------------------------------------------------------------
+void ofApp::playNodes(const animatron::osc::Message & msg) {
+    // TODO: change Nodes for Node (??)
+    if(msg.getNumArgs() == 1) {
+        animatron::node::play(msg.getArgAsString(0));
+    } else {
+        animatron::node::play();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::reverseNodes(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::reverse(msg.getArgAsString(0));
+    } else {
+        animatron::node::reverse();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::pauseNodes(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::pause(msg.getArgAsString(0));
+    } else {
+        animatron::node::pause();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::stopNodes(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::stop(msg.getArgAsString(0));
+    } else {
+        animatron::node::stop();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::gotoFrame(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::gotoFrame(msg.getArgAsString(0), msg.getArgAsInt(1));
+    } else {
+        animatron::node::gotoFrame(msg.getArgAsInt(1));
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::setNodesFps(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::setFps(msg.getArgAsString(0), msg.getArgAsFloat(1));
+    } else {
+        animatron::node::setFps(msg.getArgAsFloat(1));
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::loopNodes(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::loop(msg.getArgAsString(0));
+    } else {
+        animatron::node::loop();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::pingpongNodes(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 1) {
+        animatron::node::pingpong(msg.getArgAsString(0));
+    } else {
+        animatron::node::pingpong();
+    }
 }

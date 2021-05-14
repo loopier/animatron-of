@@ -2,6 +2,7 @@
 
 namespace  {
     animatron::image::ImageSequenceMap sequences;
+    string basepath = "imgs/";
 }
 
 //-------------------------------------------------------
@@ -42,8 +43,15 @@ void animatron::image::addSequence(string name, string path) {
     } else {
         sequence = make_shared<ImageSequence>(ImageSequence());
         sequences[name] = sequence;
-        sequence->loadSequence(path);
-        ofLogNotice()<<"Created new image sequence '"<<name<<"' from '"<<path<<"'";
+
+        string fullpath = basepath + path + "/";
+        ofLogVerbose()<<"directory: "<<ofDirectory(fullpath).exists();
+        if(ofDirectory(fullpath).exists()) {
+            sequence->loadSequence(fullpath);
+        } else {
+            sequence->loadSequence(basepath+"default");
+        }
+        ofLogNotice()<<"Add sequence '"<<name<<"' from '"<<fullpath<<"'";
     }
 }
 
@@ -66,8 +74,9 @@ animatron::image::ImageSequencePtr animatron::image::getByName(string name) {
     if(exists(name)) {
         sequence = sequences.find(name)->second;
     } else {
-        ofLogVerbose()<<"Image sequence not found.  Creating default: "<<name;
-        addSequence(name, "imgs/default");
+        ofLogVerbose()<<"Image sequence not found: "<<name;
+//        addSequence(name, imgsPath+"default");
+        addSequence(name, name);
         sequence = sequences.find(name)->second;
     }
     return sequence;

@@ -52,6 +52,14 @@ private:
     void toggleOrthographicCamera(const animatron::osc::Message & msg);
 
     void loadImageSequence(const animatron::osc::Message & msg);
+    void playNodes(const animatron::osc::Message & msg);
+    void reverseNodes(const animatron::osc::Message & msg);
+    void pauseNodes(const animatron::osc::Message & msg);
+    void stopNodes(const animatron::osc::Message & msg);
+    void gotoFrame(const animatron::osc::Message & msg);
+    void setNodesFps(const animatron::osc::Message & msg);
+    void loopNodes(const animatron::osc::Message & msg);
+    void pingpongNodes(const animatron::osc::Message & msg);
 
     /// \brief create a new node with a name
     void newNode(const animatron::osc::Message & msg);
@@ -71,9 +79,4 @@ private:
     animatron::midi::MessageList midiMessages;
     size_t maxMidiMessages = 10;
     ofEasyCam cam;
-
-    // remove
-    animatron::node::NodePtr anode;
-    animatron::image::ImageSequencePtr aseq;
-    ofTexture tex;
 };

@@ -14,23 +14,20 @@ animatron::node::NodeMap animatron::node::getNodes() {
 
 //-------------------------------------------------------
 void animatron::node::updateNodes() {
-    for (const auto &item : nodes) {
-        if(image::exists(item.first)) {
-            image::getByName(item.first)->update();
-        }
+    for (const auto &item : textures) {
+        item.second->update();
     }
 }
 
 //-------------------------------------------------------
 void animatron::node::drawNodes() {
     for (const auto &item : nodes) {
-        if(image::exists(item.first)) {
-//            ofLogVerbose()<<"Drawing nodes with texture";
-            image::getByName(item.first)->getTextureForCurrentFrame().bind();
+        // check if node has a texture assigned
+        if(textures.count(item.first)) {
+            textures[item.first]->getTextureForCurrentFrame().bind();
             item.second->draw();
-            image::getByName(item.first)->getTextureForCurrentFrame().unbind();
+            textures[item.first]->getTextureForCurrentFrame().unbind();
         } else {
-//            ofLogVerbose()<<"Drawing empty nodes";
             item.second->draw();
         }
     }
@@ -170,8 +167,100 @@ void animatron::node::setNodesTexture(string textureName) {
 
 //-------------------------------------------------------
 void animatron::node::setTexture(string nodeName, string textureName) {
+    // TODO: change textures from pointer to instance, so they can be independently played.
+    //		Maybe sequences can be pointers, but the sequenceplayer must be an instance.
     ofLogVerbose() << "Setting texture: '"<<textureName<<"' to node '"<<nodeName<<"'";
     textures[nodeName] = image::getByName(textureName);
+    ofLogVerbose()<<"textures["<<nodeName<<"] = "<<typeid(textures[nodeName]).name();
+}
+
+void animatron::node::play(string name) {
+    ofLogVerbose()<<"play: "<<name;
+//    ofLogVerbose()<<"node exists: "<<name<<" "<<exists(name);
+//    ofLogVerbose()<<"img exists: "<<name<<" "<<image::exists(name);
+//    ofLogVerbose()<<"texture exists: "<<textures.count(name);
+    if(textures.count(name) > 0) {
+        textures[name]->play();
+        textures[name]->setShouldLoop(true);
+        ofLogVerbose()<<"playing: "<<textures[name]->isPlaying();
+    }
+}
+
+//------------------------------------------------------
+void animatron::node::play() {
+    for(auto name : selectedNodes) {
+        play(name);
+    }
+}
+
+//------------------------------------------------------
+void animatron::node::reverse(string name) {
+    ofLogVerbose()<<"reverse: "<<name;
+}
+
+//------------------------------------------------------
+void animatron::node::reverse() {
+
+}
+
+//------------------------------------------------------
+void animatron::node::pause(string name) {
+    ofLogVerbose()<<"pause: "<<name;
+}
+
+//------------------------------------------------------
+void animatron::node::pause() {
+
+}
+
+//------------------------------------------------------
+void animatron::node::stop(string name) {
+    ofLogVerbose()<<"stop: "<<name;
+}
+
+//------------------------------------------------------
+void animatron::node::stop() {
+
+}
+
+//------------------------------------------------------
+void animatron::node::gotoFrame(string name, int frame) {
+    ofLogVerbose()<<"goto: "<<frame<<" in: "<<name;
+}
+
+//------------------------------------------------------
+void animatron::node::gotoFrame(int frame) {
+
+}
+
+//------------------------------------------------------
+void animatron::node::setFps(string name, float fps) {
+    ofLogVerbose()<<"set fps: "<<fps<<" in: "<<name;
+}
+
+//------------------------------------------------------
+void animatron::node::setFps(float fps) {
+
+}
+
+//------------------------------------------------------
+void animatron::node::loop(string name) {
+    ofLogVerbose()<<"loop: "<<name;
+}
+
+//------------------------------------------------------
+void animatron::node::loop() {
+
+}
+
+//------------------------------------------------------
+void animatron::node::pingpong(string name) {
+    ofLogVerbose()<<"pingpong: "<<name;
+}
+
+//------------------------------------------------------
+void animatron::node::pingpong() {
+
 }
 
 //-------------------------------------------------------
