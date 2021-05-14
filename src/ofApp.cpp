@@ -4,8 +4,10 @@
 void ofApp::setup(){
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofDisableArbTex();
-
     ofEnableDepthTest();
+    ofEnableAlphaBlending();
+    ofBackground(0);
+
     cam.enableMouseInput();
     cam.enableOrtho();
 
@@ -66,6 +68,8 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     cam.begin();
+    glAlphaFunc(GL_GREATER,0.1f);
+    glEnable(GL_ALPHA_TEST);
     ofEnableDepthTest();
     animatron::node::drawNodes();
     ofDisableDepthTest();

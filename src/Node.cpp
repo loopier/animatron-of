@@ -27,6 +27,7 @@ void animatron::node::drawNodes() {
             textures[item.first]->getTextureForCurrentFrame().bind();
             item.second->draw();
             textures[item.first]->getTextureForCurrentFrame().unbind();
+//            item.second->drawWireframe();
         } else {
             item.second->draw();
         }
@@ -178,6 +179,7 @@ void animatron::node::setTexture(string nodeName, string textureName) {
     image::ImageSequencePtr original = image::getByName(textureName);
     textures[nodeName] = make_shared<image::ImageSequence>(image::ImageSequence());
     *textures[nodeName] = *original;
+    getByName(nodeName)->resizeToTexture(textures[nodeName]->getTextureForFrame(0));
 //    ofLogVerbose()<<"textures["<<nodeName<<"] = "<<typeid(textures[nodeName]).name();
     // print memory allocations
     ofLogVerbose()<<"original mem addr: "<<original.get();
