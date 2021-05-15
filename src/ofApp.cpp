@@ -91,6 +91,19 @@ void ofApp::mapMessageToFunc(animatron::osc::Message & msg) {
 }
 
 //--------------------------------------------------------------
+void ofApp::newMidiMessage(animatron::midi::Message & msg) {
+    midiMessages.push_back(msg);
+
+    // a queue of midi messages
+    while(midiMessages.size() > maxMidiMessages) {
+        midiMessages.erase(midiMessages.begin());
+    }
+
+    // ofxMidiIn.verbose() works better than this
+//    animatron::midi::logMessage(msg);
+}
+
+//--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     switch(key) {
       case 'o':
@@ -300,19 +313,6 @@ void ofApp::logNodeInfo(const animatron::osc::Message & msg) {
             animatron::node::log(msg.getArgAsString(i));
         }
     }
-}
-
-//--------------------------------------------------------------
-void ofApp::newMidiMessage(animatron::midi::Message & msg) {
-    midiMessages.push_back(msg);
-
-    // a queue of midi messages
-    while(midiMessages.size() > maxMidiMessages) {
-        midiMessages.erase(midiMessages.begin());
-    }
-
-    // ofxMidiIn.verbose() works better than this
-//    animatron::midi::logMessage(msg);
 }
 
 //--------------------------------------------------------------
