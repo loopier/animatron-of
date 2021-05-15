@@ -8,6 +8,7 @@ namespace animatron {
 namespace config {
 
 void setup();
+void print();
 
 string getConfigPath();
 string getAppSupportPath();

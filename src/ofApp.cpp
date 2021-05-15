@@ -9,11 +9,6 @@ void ofApp::setup(){
     ofBackground(0);
 
     animatron::config::setup();
-    ofLogVerbose("config path")<<animatron::config::getConfigPath();
-    ofLogVerbose("app support path")<<animatron::config::getAppSupportPath();
-    ofLogVerbose("OSC ip")<<animatron::config::getOscIp();
-    ofLogVerbose("OSC port")<<animatron::config::getOscPort();
-    ofLogVerbose("MIDI IN port")<<animatron::config::getMidiInPort();
 
     cam.enableMouseInput();
     cam.enableOrtho();
@@ -40,6 +35,7 @@ void ofApp::setup(){
     messageMap["/help"] = &ofApp::help;
     messageMap["/verbose"] = &ofApp::verbose;
     messageMap["/silent"] = &ofApp::silent;
+    messageMap["/config"] = &ofApp::config;
     messageMap["/midiports"] = &ofApp::listMidiPorts;
     messageMap["/midiport"] = &ofApp::setMidiPort;
     // node
@@ -181,6 +177,11 @@ void ofApp::verbose(const animatron::osc::Message & msg) {
 //--------------------------------------------------------------
 void ofApp::silent(const animatron::osc::Message & msg) {
    ofSetLogLevel(OF_LOG_NOTICE);
+}
+
+//--------------------------------------------------------------
+void ofApp::config(const animatron::osc::Message & msg) {
+   animatron::config::print();
 }
 
 //--------------------------------------------------------------

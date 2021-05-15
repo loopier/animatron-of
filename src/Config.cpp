@@ -33,6 +33,22 @@ void animatron::config::setup() {
     // load config file
     ofFile configFile(configPath+"/config.json");
     configFile >> conf;
+
+    print();
+}
+
+//-------------------------------------------------------
+void animatron::config::print() {
+    stringstream ss;
+//    ss<<"====== CONFIG ======="<<endl;
+//    ss<<"---------------------"<<endl;
+    ss<<"config: "<<getConfigPath()<<endl;
+    ss<<"appsupport: "<<getAppSupportPath()<<endl;
+//    ss<<"---------------------"<<endl;
+    ss<<"osc listening on: "<<getOscIp()<<":"<<getOscPort()<<endl;
+//    ss<<"---------------------"<<endl;
+    ss<<"midi in port: "<<getMidiInPort()<<endl;
+    ofLogNotice()<<endl<<ss.str();
 }
 
 //-------------------------------------------------------

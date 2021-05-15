@@ -37,6 +37,8 @@ private:
     void verbose(const animatron::osc::Message & msg);
     /// \brief only log important messages
     void silent(const animatron::osc::Message & msg);
+    /// \brief print configuration to console
+    void config(const animatron::osc::Message & msg);
 
     // MIDI -------------------------------------------------------------------
     /// \brief list available midi ports
