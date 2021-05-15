@@ -1,0 +1,17 @@
+{
+    "config": "~/.config/animatron",
+    "path": {
+        "config": "~/.config/animatron",
+        "appsupport": "~/.local/share/animatron"
+    },
+    "osc": {
+        "server": {
+            "ip": "127.0.0.1",
+            "port": 12345
+        }
+    },
+    "midiin": {
+        "port": 2,
+        "name": "SuperCollider:out0 129:4"
+    }
+}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "Config.h"
 #include "Node.h"
 //#include "ImageSequence.h"
 #include "Osc.h"

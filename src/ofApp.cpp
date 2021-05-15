@@ -8,6 +8,13 @@ void ofApp::setup(){
     ofEnableAlphaBlending();
     ofBackground(0);
 
+    animatron::config::setup();
+    ofLogVerbose("config path")<<animatron::config::getConfigPath();
+    ofLogVerbose("app support path")<<animatron::config::getAppSupportPath();
+    ofLogVerbose("OSC ip")<<animatron::config::getOscIp();
+    ofLogVerbose("OSC port")<<animatron::config::getOscPort();
+    ofLogVerbose("MIDI IN port")<<animatron::config::getMidiInPort();
+
     cam.enableMouseInput();
     cam.enableOrtho();
 
