@@ -15,8 +15,8 @@ void ofApp::setup(){
     // open port
     midiIn.listInPorts();
 //    midiIn.openVirtualPort("ofxMidiIn Input"); // open a virtual port
-//    midiIn.openPort(2); // by number
-    midiIn.openPort("SuperCollider:out0 130:4"); // by name
+//    midiIn.openPort("SuperCollider:out0 129:4"); // by name
+    midiIn.openPort(2); // by number
     // don't ignore sysex, timing, & active sense messages,
     // these are ignored by default
     midiIn.ignoreTypes(false, false, false);
@@ -32,6 +32,8 @@ void ofApp::setup(){
     messageMap["/help"] = &ofApp::help;
     messageMap["/verbose"] = &ofApp::verbose;
     messageMap["/silent"] = &ofApp::silent;
+    messageMap["/midiports"] = &ofApp::listMidiPorts;
+    messageMap["/midiport"] = &ofApp::setMidiPort;
     // node
     messageMap["/new"] = &ofApp::newNode;
     messageMap["/remove"] = &ofApp::removeNodes;
@@ -171,6 +173,17 @@ void ofApp::verbose(const animatron::osc::Message & msg) {
 //--------------------------------------------------------------
 void ofApp::silent(const animatron::osc::Message & msg) {
    ofSetLogLevel(OF_LOG_NOTICE);
+}
+
+//--------------------------------------------------------------
+void ofApp::listMidiPorts(const animatron::osc::Message & msg) {
+    midiIn.listInPorts();
+}
+
+//--------------------------------------------------------------
+void ofApp::setMidiPort(const animatron::osc::Message & msg) {
+    midiIn.closePort();
+    midiIn.openPort(msg.getArgAsInt(0)); // by number
 }
 
 //--------------------------------------------------------------

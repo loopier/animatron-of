@@ -36,6 +36,13 @@ private:
     void verbose(const animatron::osc::Message & msg);
     /// \brief only log important messages
     void silent(const animatron::osc::Message & msg);
+
+    // MIDI -------------------------------------------------------------------
+    /// \brief list available midi ports
+    void listMidiPorts(const animatron::osc::Message & msg);
+    void setMidiPort(const animatron::osc::Message & msg);
+
+    // NODES ------------------------------------------------------------------
     /// \brief list all the node names
     void listNodes(const animatron::osc::Message & msg);
     void listSelectedNodes(const animatron::osc::Message & msg);
@@ -48,9 +55,15 @@ private:
     void rotateNodes(const animatron::osc::Message & msg);
     void scaleNodes(const animatron::osc::Message & msg);
     void setTexture(const animatron::osc::Message & msg);
+    /// \brief create a new node with a name
+    void newNode(const animatron::osc::Message & msg);
+    /// \brief log node info
+    void logNodeInfo(const animatron::osc::Message & msg);
 
+    // CAM ------------------------------------------------------------------
     void toggleOrthographicCamera(const animatron::osc::Message & msg);
 
+    // IMAGE SEQUENCE -------------------------------------------------------
     void loadImageSequence(const animatron::osc::Message & msg);
     void playNodes(const animatron::osc::Message & msg);
     void reverseNodes(const animatron::osc::Message & msg);
@@ -61,12 +74,6 @@ private:
     void loopNodes(const animatron::osc::Message & msg);
     void noloopNodes(const animatron::osc::Message & msg);
     void pingpongNodes(const animatron::osc::Message & msg);
-
-    /// \brief create a new node with a name
-    void newNode(const animatron::osc::Message & msg);
-
-    /// \brief log node info
-    void logNodeInfo(const animatron::osc::Message & msg);
 
     /// \brief map OSC message to a function in the server
     void mapMessageToFunc(animatron::osc::Message & msg);
