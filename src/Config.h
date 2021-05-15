@@ -13,7 +13,6 @@ void print();
 string getConfigPath();
 string getAppSupportPath();
 
-string getOscIp();
 int getOscPort();
 
 int getMidiInPort();

@@ -19,7 +19,7 @@ void ofApp::setup(){
     midiIn->addListener(this);
 
     // setup OSC mapper
-    osc.setup();
+    osc.setup(animatron::config::getOscPort());
     ofAddListener(osc.newOscMessageEvent, this, &ofApp::mapMessageToFunc);
     // app
     messageMap["/help"] = &ofApp::help;

@@ -31,11 +31,15 @@ animatron::osc::OscManager::~OscManager()
     ofLogVerbose() << __FUNCTION__ << ": OscManager object destroyed";
 }
 
-void animatron::osc::OscManager::setup()
+void animatron::osc::OscManager::setup(int newListenPort, string newRemoteIp, int newRemotePort)
 {
-    receiver.setup(listenPort);
-    ofLogNotice() << "OSC listening on port " << listenPort;
-    sender.setup(remoteIp, remotePort);
+    receiver.setup(newListenPort);
+    ofLogNotice() << "OSC listening on port " << newListenPort;
+    sender.setup(newRemoteIp, newRemotePort);
+}
+
+void animatron::osc::OscManager::setup(int port) {
+    setup(port, remoteIp, remotePort);
 }
 
 void animatron::osc::OscManager::update()

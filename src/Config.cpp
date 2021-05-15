@@ -45,9 +45,9 @@ void animatron::config::print() {
     ss<<"config: "<<getConfigPath()<<endl;
     ss<<"appsupport: "<<getAppSupportPath()<<endl;
 //    ss<<"---------------------"<<endl;
-    ss<<"osc listening on: "<<getOscIp()<<":"<<getOscPort()<<endl;
+    ss<<"OSC listening on port: "<<getOscPort()<<endl;
 //    ss<<"---------------------"<<endl;
-    ss<<"midi in port: "<<getMidiInPort()<<endl;
+    ss<<"MIDI-IN port: "<<getMidiInPort()<<endl;
     ofLogNotice()<<endl<<ss.str();
 }
 
@@ -59,11 +59,6 @@ string animatron::config::getConfigPath() {
 //-------------------------------------------------------
 string animatron::config::getAppSupportPath() {
     return appSupportPath;
-}
-
-//-------------------------------------------------------
-string animatron::config::getOscIp() {
-    return conf["osc"]["server"]["ip"];
 }
 
 //-------------------------------------------------------

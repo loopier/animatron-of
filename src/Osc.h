@@ -25,7 +25,8 @@ namespace animatron {
             OscManager();
             ~OscManager();
             
-            void setup();
+            void setup(int port);
+            void setup(int newListenPort, string newRemoteIp, int newRemotePort);
             void update();
             
             void listenToPort(const int port);
