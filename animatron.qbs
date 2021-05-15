@@ -16,6 +16,8 @@ Project{
 //            'src/utils.h',
             'src/ofApp.cpp',
             'src/ofApp.h',
+            'src/Config.cpp',
+            'src/Config.h',
             'src/Node.cpp',
             'src/Node.h',
             'src/Osc.cpp',
@@ -27,15 +29,21 @@ Project{
 //            'src/types.h',
         ]
 
-        of.addons: [
-            'ofxOpenCv','ofxOsc','ofxXmlSettings','ofxImageSequence','ofxImageSequencePlayback','ofxMidi',
-        ]
+    of.addons: [
+        'ofxOpenCv',
+        'ofxOsc',
+        'ofxXmlSettings',
+        'ofxImageSequence',
+        'ofxImageSequencePlayback',
+        'ofxMidi',
+        'ofxYAML',
+    ]
 
         // additional flags for the project. the of module sets some
         // flags by default to add the core libraries, search paths...
         // this flags can be augmented through the following properties:
         of.pkgConfigs: []       // list of additional system pkgs to include
-        of.includePaths: []     // include search paths
+        of.includePaths: ['/home/roger/of-v0.11.0/addons/ofxYAML/libs/yaml-cpp/include']     // include search paths
         of.cFlags: []           // flags passed to the c compiler
         of.cxxFlags: []         // flags passed to the c++ compiler
         of.linkerFlags: []      // flags passed to the linker
