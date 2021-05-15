@@ -1,5 +1,9 @@
 #include "Midi.h"
 
+animatron::midi::MidiInPtr animatron::midi::newMidiIn(string name) {
+   return make_shared<MidiIn>(name);
+}
+
 void animatron::midi::logMessage(Message & msg) {
     stringstream tx;
     tx<<"status: "<<msg.status<<endl;

@@ -12,18 +12,19 @@ void ofApp::setup(){
     cam.enableOrtho();
 
     // setup MIDI
+    midiIn = animatron::midi::newMidiIn("Animatron");
     // open port
-    midiIn.listInPorts();
-//    midiIn.openVirtualPort("ofxMidiIn Input"); // open a virtual port
-//    midiIn.openPort("SuperCollider:out0 129:4"); // by name
-    midiIn.openPort(2); // by number
+    midiIn->listInPorts();
+//    midiIn->openVirtualPort("ofxMidiIn Input"); // open a virtual port
+//    midiIn->openPort("SuperCollider:out0 129:4"); // by name
+    midiIn->openPort(0); // by number
     // don't ignore sysex, timing, & active sense messages,
     // these are ignored by default
-    midiIn.ignoreTypes(false, false, false);
+    midiIn->ignoreTypes(false, false, false);
     // add ofApp as a listener
-    midiIn.addListener(this);
+    midiIn->addListener(this);
     // print received messages to the console
-    midiIn.setVerbose(true);
+    midiIn->setVerbose(true);
 
     // setup OSC mapper
     osc.setup();
@@ -80,8 +81,8 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-    midiIn.closePort();
-    midiIn.removeListener(this);
+    midiIn->closePort();
+    midiIn->removeListener(this);
 }
 
 //--------------------------------------------------------------
@@ -177,13 +178,13 @@ void ofApp::silent(const animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::listMidiPorts(const animatron::osc::Message & msg) {
-    midiIn.listInPorts();
+    midiIn->listInPorts();
 }
 
 //--------------------------------------------------------------
 void ofApp::setMidiPort(const animatron::osc::Message & msg) {
-    midiIn.closePort();
-    midiIn.openPort(msg.getArgAsInt(0)); // by number
+    midiIn->closePort();
+    midiIn->openPort(msg.getArgAsInt(0)); // by number
 }
 
 //--------------------------------------------------------------
