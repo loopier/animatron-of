@@ -13,7 +13,9 @@ void print();
 string getConfigPath();
 string getAppSupportPath();
 
-int getOscPort();
+int getOscListenPort();
+string getOscRemoteIp();
+int getOscRemotePort();
 
 int getMidiInPort();
 

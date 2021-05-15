@@ -17,7 +17,12 @@
 namespace animatron {
     namespace osc {
 
+        typedef ofxOscReceiver Receiver;
+        typedef ofxOscSender Sender;
         typedef ofxOscMessage Message;
+
+        class OscManager;
+        typedef shared_ptr<OscManager> OscManagerPtr;
 
         class OscManager
         {

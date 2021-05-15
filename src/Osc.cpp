@@ -78,6 +78,7 @@ void animatron::osc::OscManager::sendMessage(animatron::osc::Message& m)
 //      INTERFACE FUNCTIONS
 //------------------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------------------
 void animatron::osc::printMessage(const animatron::osc::Message& m, const string& prepend, const ofLogLevel& loglevel)
 {
     //    ofLogVerbose() << typeid(this).name() << "::" << __FUNCTION__;
@@ -87,6 +88,7 @@ void animatron::osc::printMessage(const animatron::osc::Message& m, const string
     ofLogVerbose()<<"osc: "<<msg;
 }
 
+//------------------------------------------------------------------------------------------
 string animatron::osc::getPrintableMessage(const animatron::osc::Message& m)
 {
     string msg;
@@ -117,6 +119,7 @@ string animatron::osc::getPrintableMessage(const animatron::osc::Message& m)
     return msg;
 }
 
+//------------------------------------------------------------------------------------------
 string animatron::osc::getSimplifiedMessage(const animatron::osc::Message& m)
 {
     string msg;

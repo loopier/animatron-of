@@ -19,7 +19,10 @@ void ofApp::setup(){
     midiIn->addListener(this);
 
     // setup OSC mapper
-    osc.setup(animatron::config::getOscPort());
+//    osc.setup(animatron::config::getOscPort());
+    osc.setup(animatron::config::getOscListenPort(),
+              animatron::config::getOscRemoteIp(),
+              animatron::config::getOscRemotePort());
     ofAddListener(osc.newOscMessageEvent, this, &ofApp::mapMessageToFunc);
     // app
     messageMap["/help"] = &ofApp::help;
@@ -97,6 +100,56 @@ void ofApp::newMidiMessage(animatron::midi::Message & msg) {
     // a queue of midi messages
     while(midiMessages.size() > maxMidiMessages) {
         midiMessages.erase(midiMessages.begin());
+    }
+
+    animatron::osc::Message oscmsg;
+
+    switch(msg.status) {
+//        case MIDI_NOTE_OFF:
+//            ofLogVerbose("midi")<<"Note Off";
+        case MIDI_NOTE_ON:
+            ofLogVerbose("midi")<<"NoteOn ch: "<<msg.channel<<" pitch: "<<msg.pitch<<" vel: "<<msg.velocity;
+            oscmsg.setAddress("/goto");
+            oscmsg.addInt32Arg(msg.pitch);
+            osc.sendMessage(oscmsg);
+//            animatron::node::gotoFrame(msg.pitch);
+//        case MIDI_CONTROL_CHANGE:
+//            ofLogVerbose("midi")<<"Control Change";
+//        case MIDI_PROGRAM_CHANGE:
+//            ofLogVerbose("midi")<<"Program Change";
+//        case MIDI_PITCH_BEND:
+//            ofLogVerbose("midi")<<"Pitch Bend";
+//        case MIDI_AFTERTOUCH:
+//            ofLogVerbose("midi")<<"Aftertouch";
+//        case MIDI_POLY_AFTERTOUCH:
+//            ofLogVerbose("midi")<<"Poly Aftertouch";
+//        case MIDI_SYSEX:
+//            ofLogVerbose("midi")<<"Sysex";
+//        case MIDI_TIME_CODE:
+//            ofLogVerbose("midi")<<"Time Code";
+//        case MIDI_SONG_POS_POINTER:
+//            ofLogVerbose("midi")<<"Song Pos";
+//        case MIDI_SONG_SELECT:
+//            ofLogVerbose("midi")<<"Song Select";
+//        case MIDI_TUNE_REQUEST:
+//            ofLogVerbose("midi")<<"Tune Request";
+//        case MIDI_SYSEX_END:
+//            ofLogVerbose("midi")<<"Sysex End";
+//        case MIDI_TIME_CLOCK:
+//            ofLogVerbose("midi")<<"Time Clock";
+//        case MIDI_START:
+//            ofLogVerbose("midi")<<"Start";
+//        case MIDI_CONTINUE:
+//            ofLogVerbose("midi")<<"Continue";
+//        case MIDI_STOP:
+//            ofLogVerbose("midi")<<"Stop";
+//        case MIDI_ACTIVE_SENSING:
+//            ofLogVerbose("midi")<<"Active Sensing";
+//        case MIDI_SYSTEM_RESET:
+//            ofLogVerbose("midi")<<"System Reset";
+        default:
+            ofLogVerbose("midi")<<"Unknown";
+
     }
 
     // ofxMidiIn.verbose() works better than this
