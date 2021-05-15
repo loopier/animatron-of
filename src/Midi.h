@@ -13,7 +13,7 @@ typedef ofxMidiListener MidiListener;
 typedef shared_ptr<MidiIn> MidiInPtr;
 typedef vector<Message> MessageList;
 
-MidiInPtr newMidiIn(string name);
+MidiInPtr setup(int port);
 void logMessage(Message & msg);
 }
 }

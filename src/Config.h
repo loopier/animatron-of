@@ -7,7 +7,7 @@
 namespace animatron {
 namespace config {
 
-void setup();
+void load();
 void print();
 
 string getConfigPath();

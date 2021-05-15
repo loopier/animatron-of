@@ -7,7 +7,7 @@ string appSupportPath = ofFilePath().getUserHomeDir() + "/.local/share/animatron
 }
 
 //-------------------------------------------------------
-void animatron::config::setup() {
+void animatron::config::load() {
     // check if config directory exists
     ofDirectory configdir = ofDirectory(configPath);
     if(configdir.exists() == false) {

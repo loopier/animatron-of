@@ -11,7 +11,7 @@
         }
     },
     "midiin": {
-        "port": 2,
+        "port": 0,
         "name": "SuperCollider:out0 129:4"
     }
 }

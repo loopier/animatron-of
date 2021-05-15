@@ -8,25 +8,15 @@ void ofApp::setup(){
     ofEnableAlphaBlending();
     ofBackground(0);
 
-    animatron::config::setup();
-
     cam.enableMouseInput();
     cam.enableOrtho();
 
+    animatron::config::load();
+
     // setup MIDI
-    midiIn = animatron::midi::newMidiIn("Animatron");
-    // open port
-    midiIn->listInPorts();
-//    midiIn->openVirtualPort("ofxMidiIn Input"); // open a virtual port
-//    midiIn->openPort("SuperCollider:out0 129:4"); // by name
-    midiIn->openPort(0); // by number
-    // don't ignore sysex, timing, & active sense messages,
-    // these are ignored by default
-    midiIn->ignoreTypes(false, false, false);
+    midiIn = animatron::midi::setup(animatron::config::getMidiInPort());
     // add ofApp as a listener
     midiIn->addListener(this);
-    // print received messages to the console
-    midiIn->setVerbose(true);
 
     // setup OSC mapper
     osc.setup();
