@@ -17,6 +17,7 @@ void ofApp::setup(){
     midiIn = animatron::midi::setup(animatron::config::getMidiInPort());
     // add ofApp as a listener
     midiIn->addListener(this);
+    midiMap = animatron::midi::loadFunctionMap("midi-interface_default.json");
 
     // setup OSC mapper
 //    osc.setup(animatron::config::getOscPort());
@@ -104,15 +105,18 @@ void ofApp::newMidiMessage(animatron::midi::Message & msg) {
 
     animatron::osc::Message oscmsg;
 
-    switch(msg.status) {
+    // TODO: recursively convert MIDI map info to OSC message
+    msg.getStatusString(msg.status);
+    ofLogVerbose("midi")<<(*midiMap)["note on"][0][0];
+
+//    switch(msg.status) {
 //        case MIDI_NOTE_OFF:
 //            ofLogVerbose("midi")<<"Note Off";
-        case MIDI_NOTE_ON:
-            ofLogVerbose("midi")<<"NoteOn ch: "<<msg.channel<<" pitch: "<<msg.pitch<<" vel: "<<msg.velocity;
-            oscmsg.setAddress("/goto");
-            oscmsg.addInt32Arg(msg.pitch);
-            osc.sendMessage(oscmsg);
-//            animatron::node::gotoFrame(msg.pitch);
+//        case MIDI_NOTE_ON:
+//            ofLogVerbose("midi")<<"NoteOn ch: "<<msg.channel<<" pitch: "<<msg.pitch<<" vel: "<<msg.velocity;
+//            oscmsg.setAddress("/goto");
+//            oscmsg.addInt32Arg(msg.pitch);
+//            osc.sendMessage(oscmsg);
 //        case MIDI_CONTROL_CHANGE:
 //            ofLogVerbose("midi")<<"Control Change";
 //        case MIDI_PROGRAM_CHANGE:
@@ -147,10 +151,9 @@ void ofApp::newMidiMessage(animatron::midi::Message & msg) {
 //            ofLogVerbose("midi")<<"Active Sensing";
 //        case MIDI_SYSTEM_RESET:
 //            ofLogVerbose("midi")<<"System Reset";
-        default:
-            ofLogVerbose("midi")<<"Unknown";
-
-    }
+//        default:
+//            ofLogVerbose("midi")<<"Unknown";
+//    }
 
     // ofxMidiIn.verbose() works better than this
 //    animatron::midi::logMessage(msg);

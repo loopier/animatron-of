@@ -88,6 +88,7 @@ private:
     animatron::osc::OscManager osc;
     animatron::midi::MidiInPtr midiIn;
     animatron::midi::MessageList midiMessages;
+    animatron::midi::MidiMapPtr midiMap;
     size_t maxMidiMessages = 10;
     ofEasyCam cam;
 };

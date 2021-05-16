@@ -1,5 +1,9 @@
 #include "Midi.h"
 
+namespace {
+animatron::midi::MidiMapPtr midimap;
+}
+
 animatron::midi::MidiInPtr animatron::midi::setup(int port) {
     MidiInPtr midiIn = make_shared<MidiIn>();
     // open port
@@ -12,6 +16,9 @@ animatron::midi::MidiInPtr animatron::midi::setup(int port) {
     midiIn->ignoreTypes(false, false, false);
     // print received messages to the console
     midiIn->setVerbose(true);
+
+    midimap = make_shared<MidiMap>();
+
    return midiIn;
 }
 
@@ -24,4 +31,17 @@ void animatron::midi::logMessage(Message & msg) {
     tx<<"vel: "<<msg.velocity<<endl;
     tx<<"ctl: "<<msg.control<<endl;
     ofLogVerbose()<<tx.str();
+}
+
+animatron::midi::MidiMapPtr animatron::midi::loadFunctionMap(string filename) {
+    ofFile file(filename);
+    if(file.exists()) {
+        ofLogVerbose("midi")<<"Loading map: "<<filename;
+        file >> *midimap;
+        ofLogVerbose("midi")<<midimap->dump();
+    } else {
+        ofLogError("midi")<<"Failed to load MIDI map.";
+        ofLogError("midi")<<"File not found: "<<filename;
+    }
+    return midimap;
 }
