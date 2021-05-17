@@ -97,7 +97,8 @@ void ofApp::mapMessageToFunc(animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::newMidiMessage(animatron::midi::Message & msg) {
-    for(auto oscmsg : animatron::midi::getOscFromMidi(msg)) {
+    vector<animatron::osc::Message> oscmsgs = animatron::midi::getOscFromMidi(msg);
+    for(auto oscmsg : oscmsgs) {
         mapMessageToFunc(oscmsg);
     }
 }

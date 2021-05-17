@@ -39,6 +39,11 @@ void logMessage(Message & msg);
 /// \brief Load a file with MIDI events mapped to Animatron functions
 MidiMapPtr loadFunctionMap(string filename);
 MidiMapPtr getMidiMap();
+/// \brief Translate MIDI events to OSC messages.
+///
+/// MIDI messages are mapped in a JSON file to OSC messages.
+/// Each MIDI event may map to more than one OSC messages, hence
+/// returning a vector instead of a single OSC message.
 vector<osc::Message> getOscFromMidi(Message & msg);
 }
 }
