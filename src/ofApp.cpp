@@ -32,6 +32,7 @@ void ofApp::setup(){
     messageMap["/config"] = &ofApp::config;
     messageMap["/midiports"] = &ofApp::listMidiPorts;
     messageMap["/midiport"] = &ofApp::setMidiPort;
+    messageMap["/midimap"] = &ofApp::setMidiMap;
     // node
     messageMap["/new"] = &ofApp::newNode;
     messageMap["/remove"] = &ofApp::removeNodes;
@@ -55,6 +56,7 @@ void ofApp::setup(){
     messageMap["/stop"] = &ofApp::stopNodes;
     messageMap["/goto"] = &ofApp::gotoFrame;
     messageMap["/fps"] = &ofApp::setNodesFps;
+    messageMap["/speed"] = &ofApp::setNodesSpeed;
     messageMap["/loop"] = &ofApp::loopNodes;
     messageMap["/noloop"] = &ofApp::noloopNodes;
     messageMap["/pingpong"] = &ofApp::pingpongNodes;
@@ -103,29 +105,33 @@ void ofApp::newMidiMessage(animatron::midi::Message & msg) {
 //    }
     ofLogVerbose("midi")<<"Converting midi msg to lowercase: "<<msg.getStatusString(msg.status);
     string status = ofToLower(msg.getStatusString(msg.status));
-    ofLogVerbose("midi")<<(*midimap)[status];
+//    ofLogVerbose("midi")<<(*midimap)[status];
     for(auto & item : (*midimap)[status]) {
         animatron::osc::Message oscmsg;
         oscmsg.setAddress(item[0]);
         for(auto & arg : vector<ofJson>(item.begin() + 1, item.end())) {
             // channel, pitch, velocity, control, value, deltatime
             float normalized;
-            bool isMidi;
             if(arg == "pitch") {
                 normalized = msg.pitch / 127.0;
                 oscmsg.addFloatArg(normalized);
+                ofLogVerbose("midi")<<"mapped pitch: "<<msg.pitch<<" >> "<<normalized;
             } else if(arg == "velocity") {
                 normalized = msg.velocity / 127.0;
                 oscmsg.addFloatArg(normalized);
+                ofLogVerbose("midi")<<"mapped pitch: "<<msg.velocity<<" >> "<<normalized;
             } else if(arg == "control") {
                 normalized = msg.control / 127.0;
                 oscmsg.addFloatArg(normalized);
+                ofLogVerbose("midi")<<"mapped pitch: "<<msg.control<<" >> "<<normalized;
             } else if(arg == "value") {
                 normalized = msg.value / 127.0;
                 oscmsg.addFloatArg(normalized);
+                ofLogVerbose("midi")<<"mapped pitch: "<<msg.value<<" >> "<<normalized;
             } else if(arg == "deltatime") {
                 normalized = msg.deltatime / 127.0;
                 oscmsg.addFloatArg(normalized);
+                ofLogVerbose("midi")<<"mapped pitch: "<<msg.deltatime<<" >> "<<normalized;
             } else {
                 // if message is not a midi it's either a string or a float
                 try {
@@ -233,6 +239,12 @@ void ofApp::listMidiPorts(const animatron::osc::Message & msg) {
 void ofApp::setMidiPort(const animatron::osc::Message & msg) {
     midiin->closePort();
     midiin->openPort(msg.getArgAsInt(0)); // by number
+}
+
+//--------------------------------------------------------------
+void ofApp::setMidiMap(const animatron::osc::Message & msg) {
+    animatron::midi::loadFunctionMap(msg.getArgAsString(0));
+    midimap = animatron::midi::getMidiMap();
 }
 
 //--------------------------------------------------------------
@@ -415,6 +427,15 @@ void ofApp::setNodesFps(const animatron::osc::Message & msg) {
         animatron::node::setFps(msg.getArgAsString(0), msg.getArgAsFloat(1));
     } else {
         animatron::node::setFps(msg.getArgAsFloat(0));
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::setNodesSpeed(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 2) {
+        animatron::node::setFrameRate(msg.getArgAsString(0), msg.getArgAsFloat(1));
+    } else {
+        animatron::node::setFrameRate(msg.getArgAsFloat(0));
     }
 }
 

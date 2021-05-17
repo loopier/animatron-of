@@ -44,6 +44,7 @@ private:
     /// \brief list available midi ports
     void listMidiPorts(const animatron::osc::Message & msg);
     void setMidiPort(const animatron::osc::Message & msg);
+    void setMidiMap(const animatron::osc::Message & msg);
 
     // NODES ------------------------------------------------------------------
     /// \brief list all the node names
@@ -74,6 +75,7 @@ private:
     void stopNodes(const animatron::osc::Message & msg);
     void gotoFrame(const animatron::osc::Message & msg);
     void setNodesFps(const animatron::osc::Message & msg);
+    void setNodesSpeed(const animatron::osc::Message & msg);
     void loopNodes(const animatron::osc::Message & msg);
     void noloopNodes(const animatron::osc::Message & msg);
     void pingpongNodes(const animatron::osc::Message & msg);

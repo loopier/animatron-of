@@ -284,6 +284,22 @@ void animatron::node::setFps(float fps) {
 }
 
 //------------------------------------------------------
+void animatron::node::setFrameRate(string name, float rate) {
+    ofLogVerbose()<<"set framerate: "<<rate<<" in: "<<name;
+    if (textures.count(name)) {
+        textures[name]->setFrameRate(rate);
+    }
+}
+
+//------------------------------------------------------
+void animatron::node::setFrameRate(float rate) {
+    for(auto name : selectedNodes) {
+        setFrameRate(name, rate);
+    }
+
+}
+
+//------------------------------------------------------
 void animatron::node::loop(string name) {
     ofLogVerbose()<<"loop: "<<name;
     if (textures.count(name)) {

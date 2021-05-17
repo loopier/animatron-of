@@ -76,6 +76,8 @@ void gotoFrame(string name, int frame);
 void gotoFrame(int frame);
 void setFps(string name, float fps);
 void setFps(float fps);
+void setFrameRate(string name, float rate);
+void setFrameRate(float rate);
 void loop(string name);
 void loop();
 void noloop(string name);

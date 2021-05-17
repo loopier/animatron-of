@@ -8,7 +8,11 @@ namespace image {
 
 // Extended the class instead of using
 //  typedef ofxImageSequencePlayback ImageSequence;
-// because in the original there's no way get the textures.
+// to expose some of the methods in ofxImageSequence that are not
+// available in ofxImageSequencePlayback.  Why didn't the developer
+// extend ofxImageSequence instead of using it as an instance variable?
+//
+// In ofxImageSequencePlayback there's no way get the textures.
 // Textures are needed to use them as 3d mesh textures, binding
 // them to 3d primitives.
 class ImageSequence: public ofxImageSequencePlayback
@@ -25,6 +29,8 @@ public:
     //returns a frame at a given time, used setFrameRate to set time
     ofTexture& getTextureForPercent(float percent);
 
+    //
+    void setFrameRate(float rate);
 };
 
 typedef shared_ptr<ImageSequence>      ImageSequencePtr;

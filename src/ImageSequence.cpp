@@ -33,6 +33,11 @@ ofTexture& animatron::image::ImageSequence::getTextureForPercent(float percent) 
 }
 
 //-------------------------------------------------------
+void animatron::image::ImageSequence::setFrameRate(float rate) {
+    mSequence.setFrameRate(rate);
+}
+
+//-------------------------------------------------------
 //	public interface
 //-------------------------------------------------------
 void animatron::image::addSequence(string name, string path) {
