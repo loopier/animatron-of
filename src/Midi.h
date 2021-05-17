@@ -39,6 +39,7 @@ void logMessage(Message & msg);
 /// \brief Load a file with MIDI events mapped to Animatron functions
 MidiMapPtr loadFunctionMap(string filename);
 MidiMapPtr getMidiMap();
+vector<osc::Message> getOscFromMidi(Message & msg);
 }
 }
 

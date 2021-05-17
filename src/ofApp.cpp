@@ -97,51 +97,7 @@ void ofApp::mapMessageToFunc(animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::newMidiMessage(animatron::midi::Message & msg) {
-//    midiMessages.push_back(msg);
-
-//    // a queue of midi messages
-//    while(midiMessages.size() > maxMidiMessages) {
-//        midiMessages.erase(midiMessages.begin());
-//    }
-    ofLogVerbose("midi")<<"Converting midi msg to lowercase: "<<msg.getStatusString(msg.status);
-    string status = ofToLower(msg.getStatusString(msg.status));
-//    ofLogVerbose("midi")<<(*midimap)[status];
-    for(auto & item : (*midimap)[status]) {
-        animatron::osc::Message oscmsg;
-        oscmsg.setAddress(item[0]);
-        for(auto & arg : vector<ofJson>(item.begin() + 1, item.end())) {
-            // channel, pitch, velocity, control, value, deltatime
-            float normalized;
-            if(arg == "pitch") {
-                normalized = msg.pitch / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.pitch<<" >> "<<normalized;
-            } else if(arg == "velocity") {
-                normalized = msg.velocity / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.velocity<<" >> "<<normalized;
-            } else if(arg == "control") {
-                normalized = msg.control / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.control<<" >> "<<normalized;
-            } else if(arg == "value") {
-                normalized = msg.value / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.value<<" >> "<<normalized;
-            } else if(arg == "deltatime") {
-                normalized = msg.deltatime / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.deltatime<<" >> "<<normalized;
-            } else {
-                // if message is not a midi it's either a string or a float
-                try {
-                    oscmsg.addStringArg(arg);
-                }  catch (nlohmann::detail::type_error e) {
-                    oscmsg.addFloatArg(arg);
-                }
-            }
-        }
-        ofLogVerbose("midi")<<"Converted '"<<item<<"' to osc: "<<oscmsg;
+    for(auto oscmsg : animatron::midi::getOscFromMidi(msg)) {
         mapMessageToFunc(oscmsg);
     }
 }
