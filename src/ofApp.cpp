@@ -14,13 +14,13 @@ void ofApp::setup(){
     animatron::config::load();
 
     // setup MIDI
-    midiIn = animatron::midi::setup(animatron::config::getMidiInPort());
-    // add ofApp as a listener
-    midiIn->addListener(this);
-    midiMap = animatron::midi::loadFunctionMap("midi-interface_default.json");
+    midiin = animatron::midi::setup(
+                animatron::config::getMidiInPort(),
+                animatron::config::getMidiMapFilename(),
+                this);
+    midimap = animatron::midi::getMidiMap();
 
     // setup OSC mapper
-//    osc.setup(animatron::config::getOscPort());
     osc.setup(animatron::config::getOscListenPort(),
               animatron::config::getOscRemoteIp(),
               animatron::config::getOscRemotePort());
@@ -78,8 +78,7 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-    midiIn->closePort();
-    midiIn->removeListener(this);
+    animatron::midi::exit(this);
 }
 
 //--------------------------------------------------------------
@@ -96,67 +95,49 @@ void ofApp::mapMessageToFunc(animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::newMidiMessage(animatron::midi::Message & msg) {
-    midiMessages.push_back(msg);
+//    midiMessages.push_back(msg);
 
-    // a queue of midi messages
-    while(midiMessages.size() > maxMidiMessages) {
-        midiMessages.erase(midiMessages.begin());
-    }
-
-    animatron::osc::Message oscmsg;
-
-    // TODO: recursively convert MIDI map info to OSC message
-    msg.getStatusString(msg.status);
-    ofLogVerbose("midi")<<(*midiMap)["note on"][0][0];
-
-//    switch(msg.status) {
-//        case MIDI_NOTE_OFF:
-//            ofLogVerbose("midi")<<"Note Off";
-//        case MIDI_NOTE_ON:
-//            ofLogVerbose("midi")<<"NoteOn ch: "<<msg.channel<<" pitch: "<<msg.pitch<<" vel: "<<msg.velocity;
-//            oscmsg.setAddress("/goto");
-//            oscmsg.addInt32Arg(msg.pitch);
-//            osc.sendMessage(oscmsg);
-//        case MIDI_CONTROL_CHANGE:
-//            ofLogVerbose("midi")<<"Control Change";
-//        case MIDI_PROGRAM_CHANGE:
-//            ofLogVerbose("midi")<<"Program Change";
-//        case MIDI_PITCH_BEND:
-//            ofLogVerbose("midi")<<"Pitch Bend";
-//        case MIDI_AFTERTOUCH:
-//            ofLogVerbose("midi")<<"Aftertouch";
-//        case MIDI_POLY_AFTERTOUCH:
-//            ofLogVerbose("midi")<<"Poly Aftertouch";
-//        case MIDI_SYSEX:
-//            ofLogVerbose("midi")<<"Sysex";
-//        case MIDI_TIME_CODE:
-//            ofLogVerbose("midi")<<"Time Code";
-//        case MIDI_SONG_POS_POINTER:
-//            ofLogVerbose("midi")<<"Song Pos";
-//        case MIDI_SONG_SELECT:
-//            ofLogVerbose("midi")<<"Song Select";
-//        case MIDI_TUNE_REQUEST:
-//            ofLogVerbose("midi")<<"Tune Request";
-//        case MIDI_SYSEX_END:
-//            ofLogVerbose("midi")<<"Sysex End";
-//        case MIDI_TIME_CLOCK:
-//            ofLogVerbose("midi")<<"Time Clock";
-//        case MIDI_START:
-//            ofLogVerbose("midi")<<"Start";
-//        case MIDI_CONTINUE:
-//            ofLogVerbose("midi")<<"Continue";
-//        case MIDI_STOP:
-//            ofLogVerbose("midi")<<"Stop";
-//        case MIDI_ACTIVE_SENSING:
-//            ofLogVerbose("midi")<<"Active Sensing";
-//        case MIDI_SYSTEM_RESET:
-//            ofLogVerbose("midi")<<"System Reset";
-//        default:
-//            ofLogVerbose("midi")<<"Unknown";
+//    // a queue of midi messages
+//    while(midiMessages.size() > maxMidiMessages) {
+//        midiMessages.erase(midiMessages.begin());
 //    }
-
-    // ofxMidiIn.verbose() works better than this
-//    animatron::midi::logMessage(msg);
+    ofLogVerbose("midi")<<"Converting midi msg to lowercase: "<<msg.getStatusString(msg.status);
+    string status = ofToLower(msg.getStatusString(msg.status));
+    ofLogVerbose("midi")<<(*midimap)[status];
+    for(auto & item : (*midimap)[status]) {
+        animatron::osc::Message oscmsg;
+        oscmsg.setAddress(item[0]);
+        for(auto & arg : vector<ofJson>(item.begin() + 1, item.end())) {
+            // channel, pitch, velocity, control, value, deltatime
+            float normalized;
+            bool isMidi;
+            if(arg == "pitch") {
+                normalized = msg.pitch / 127.0;
+                oscmsg.addFloatArg(normalized);
+            } else if(arg == "velocity") {
+                normalized = msg.velocity / 127.0;
+                oscmsg.addFloatArg(normalized);
+            } else if(arg == "control") {
+                normalized = msg.control / 127.0;
+                oscmsg.addFloatArg(normalized);
+            } else if(arg == "value") {
+                normalized = msg.value / 127.0;
+                oscmsg.addFloatArg(normalized);
+            } else if(arg == "deltatime") {
+                normalized = msg.deltatime / 127.0;
+                oscmsg.addFloatArg(normalized);
+            } else {
+                // if message is not a midi it's either a string or a float
+                try {
+                    oscmsg.addStringArg(arg);
+                }  catch (nlohmann::detail::type_error e) {
+                    oscmsg.addFloatArg(arg);
+                }
+            }
+        }
+        ofLogVerbose("midi")<<"Converted '"<<item<<"' to osc: "<<oscmsg;
+        mapMessageToFunc(oscmsg);
+    }
 }
 
 //--------------------------------------------------------------
@@ -245,13 +226,13 @@ void ofApp::config(const animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::listMidiPorts(const animatron::osc::Message & msg) {
-    midiIn->listInPorts();
+    midiin->listInPorts();
 }
 
 //--------------------------------------------------------------
 void ofApp::setMidiPort(const animatron::osc::Message & msg) {
-    midiIn->closePort();
-    midiIn->openPort(msg.getArgAsInt(0)); // by number
+    midiin->closePort();
+    midiin->openPort(msg.getArgAsInt(0)); // by number
 }
 
 //--------------------------------------------------------------

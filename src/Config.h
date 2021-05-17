@@ -18,6 +18,7 @@ string getOscRemoteIp();
 int getOscRemotePort();
 
 int getMidiInPort();
+string getMidiMapFilename();
 
 }
 }

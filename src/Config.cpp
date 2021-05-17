@@ -14,8 +14,8 @@ void animatron::config::load() {
        ofLogWarning("config::setup")<<configPath<<" doesn't exist";
         // create directory if it doesn't
        configdir.create();
-        // copy config_default.json to config directory
-       ofFile defaultConfigFile(ofToDataPath("config_default.json"));
+        // copy config-default.json to config directory
+       ofFile defaultConfigFile(ofToDataPath("config-default.json"));
        defaultConfigFile.copyTo(configPath+"/config.json");
     } else {
        ofLogVerbose("config::setup")<<configPath<<" exists";
@@ -80,6 +80,13 @@ int animatron::config::getOscRemotePort() {
 
 //-------------------------------------------------------
 int animatron::config::getMidiInPort() {
-    return conf["midiin"]["port"];
+    return conf["midi"]["in port"];
 }
 
+//-------------------------------------------------------
+string animatron::config::getMidiMapFilename() {
+    return conf["midi"]["map file"];
+}
+
+//-------------------------------------------------------
+string getMidiMapFilename();

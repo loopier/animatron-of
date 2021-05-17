@@ -27,8 +27,8 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
-    /// \brief midi reciever
-    void newMidiMessage(animatron::midi::Message & eventArgs);
+    /// \brief MIDI event receiver that maps MIDI messages to animator OSC controls
+    void newMidiMessage(animatron::midi::Message & msg);
 
 private:
     /// \brief osc interface list
@@ -86,9 +86,9 @@ private:
 
     animatron::node::NodeMap nodes;
     animatron::osc::OscManager osc;
-    animatron::midi::MidiInPtr midiIn;
+    animatron::midi::MidiMapper midiMapper;
+    animatron::midi::MidiInPtr midiin;
+    animatron::midi::MidiMapPtr midimap;
     animatron::midi::MessageList midiMessages;
-    animatron::midi::MidiMapPtr midiMap;
-    size_t maxMidiMessages = 10;
     ofEasyCam cam;
 };
