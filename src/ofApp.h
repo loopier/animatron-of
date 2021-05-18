@@ -74,7 +74,10 @@ private:
     void pauseNodes(const animatron::osc::Message & msg);
     void stopNodes(const animatron::osc::Message & msg);
     void gotoFrame(const animatron::osc::Message & msg);
+    void gotoPercent(const animatron::osc::Message & msg);
     void setNodesFps(const animatron::osc::Message & msg);
+    // values [0-1] multiplied by a value
+    void setNodesNormalizedFps(const animatron::osc::Message & msg);
     void setNodesSpeed(const animatron::osc::Message & msg);
     void loopNodes(const animatron::osc::Message & msg);
     void noloopNodes(const animatron::osc::Message & msg);

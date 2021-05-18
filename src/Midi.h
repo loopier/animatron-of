@@ -38,13 +38,17 @@ void exit(MidiListener * listener);
 void logMessage(Message & msg);
 /// \brief Load a file with MIDI events mapped to Animatron functions
 MidiMapPtr loadFunctionMap(string filename);
+void setMidiMap(string filename);
 MidiMapPtr getMidiMap();
 /// \brief Translate MIDI events to OSC messages.
 ///
-/// MIDI messages are mapped in a JSON file to OSC messages.
+/// MIDI messages are mapped in a JSON file to OSC messages with normalized values.
 /// Each MIDI event may map to more than one OSC messages, hence
 /// returning a vector instead of a single OSC message.
-vector<osc::Message> getOscFromMidi(Message & msg);
+///
+/// \param msg	midi::Message		MIDI message to be parsed
+/// \param map  midi::MidiMapPtr	MIDI to OSC map
+vector<osc::Message> getOscFromMidi(Message & msg, MidiMapPtr map);
 }
 }
 

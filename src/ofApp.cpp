@@ -55,7 +55,9 @@ void ofApp::setup(){
     messageMap["/pause"] = &ofApp::pauseNodes;
     messageMap["/stop"] = &ofApp::stopNodes;
     messageMap["/goto"] = &ofApp::gotoFrame;
+    messageMap["/gotopct"] = &ofApp::gotoPercent;
     messageMap["/fps"] = &ofApp::setNodesFps;
+    messageMap["/normfps"] = &ofApp::setNodesNormalizedFps;
     messageMap["/speed"] = &ofApp::setNodesSpeed;
     messageMap["/loop"] = &ofApp::loopNodes;
     messageMap["/noloop"] = &ofApp::noloopNodes;
@@ -97,7 +99,7 @@ void ofApp::mapMessageToFunc(animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::newMidiMessage(animatron::midi::Message & msg) {
-    vector<animatron::osc::Message> oscmsgs = animatron::midi::getOscFromMidi(msg);
+    vector<animatron::osc::Message> oscmsgs = animatron::midi::getOscFromMidi(msg, midimap);
     for(auto oscmsg : oscmsgs) {
         mapMessageToFunc(oscmsg);
     }
@@ -200,8 +202,7 @@ void ofApp::setMidiPort(const animatron::osc::Message & msg) {
 
 //--------------------------------------------------------------
 void ofApp::setMidiMap(const animatron::osc::Message & msg) {
-    animatron::midi::loadFunctionMap(msg.getArgAsString(0));
-    midimap = animatron::midi::getMidiMap();
+    midimap = animatron::midi::loadFunctionMap(msg.getArgAsString(0));
 }
 
 //--------------------------------------------------------------
@@ -379,11 +380,29 @@ void ofApp::gotoFrame(const animatron::osc::Message & msg) {
 }
 
 //--------------------------------------------------------------
+void ofApp::gotoPercent(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 2) {
+        animatron::node::gotoFrame(msg.getArgAsString(0), msg.getArgAsFloat(1));
+    } else {
+        animatron::node::gotoFrame(msg.getArgAsFloat(0));
+    }
+}
+
+//--------------------------------------------------------------
 void ofApp::setNodesFps(const animatron::osc::Message & msg) {
     if(msg.getNumArgs() == 2) {
         animatron::node::setFps(msg.getArgAsString(0), msg.getArgAsFloat(1));
     } else {
         animatron::node::setFps(msg.getArgAsFloat(0));
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::setNodesNormalizedFps(const animatron::osc::Message & msg) {
+    if(msg.getNumArgs() == 3) {
+        animatron::node::setFps(msg.getArgAsString(0), msg.getArgAsFloat(1) * msg.getArgAsFloat(2));
+    } else {
+        animatron::node::setFps(msg.getArgAsFloat(0) * msg.getArgAsFloat(1));
     }
 }
 

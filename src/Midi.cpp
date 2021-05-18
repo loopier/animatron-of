@@ -153,11 +153,16 @@ animatron::midi::MidiMapPtr animatron::midi::loadFunctionMap(string filename) {
 }
 
 //------------------------------------------------------------------------------------------
+void animatron::midi::setMidiMap(string filename) {
+    midimap = loadFunctionMap(filename);
+}
+
+//------------------------------------------------------------------------------------------
 animatron::midi::MidiMapPtr animatron::midi::getMidiMap() {
     return midimap;
 }
 
-vector<animatron::osc::Message> animatron::midi::getOscFromMidi(animatron::midi::Message & msg) {
+vector<animatron::osc::Message> animatron::midi::getOscFromMidi(animatron::midi::Message & msg, animatron::midi::MidiMapPtr map) {
 //    midiMessages.push_back(msg);
 
 //    // a queue of midi messages
@@ -167,43 +172,28 @@ vector<animatron::osc::Message> animatron::midi::getOscFromMidi(animatron::midi:
     ofLogVerbose("midi")<<"Converting midi msg to lowercase: "<<msg.getStatusString(msg.status);
     string status = ofToLower(msg.getStatusString(msg.status));
     vector<osc::Message> oscmsgs;
-//    ofLogVerbose("midi")<<(*midimap)[status];
-    for(auto & item : (*midimap)[status]) {
+    ofLogVerbose("midi")<<(*map)[status];
+    for(auto & item : (*map)[status]) {
         animatron::osc::Message oscmsg;
-        oscmsg.setAddress(item[0]);
-        for(auto & arg : vector<ofJson>(item.begin() + 1, item.end())) {
-            // channel, pitch, velocity, control, value, deltatime
-            float normalized;
-            if(arg == "pitch") {
-                normalized = msg.pitch / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.pitch<<" >> "<<normalized;
-            } else if(arg == "velocity") {
-                normalized = msg.velocity / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.velocity<<" >> "<<normalized;
-            } else if(arg == "control") {
-                normalized = msg.control / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.control<<" >> "<<normalized;
-            } else if(arg == "value") {
-                normalized = msg.value / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.value<<" >> "<<normalized;
-            } else if(arg == "deltatime") {
-                normalized = msg.deltatime / 127.0;
-                oscmsg.addFloatArg(normalized);
-                ofLogVerbose("midi")<<"mapped pitch: "<<msg.deltatime<<" >> "<<normalized;
-            } else {
-                // if message is not a midi it's either a string or a float
-                try {
-                    oscmsg.addStringArg(arg);
-                }  catch (nlohmann::detail::type_error e) {
-                    oscmsg.addFloatArg(arg);
-                }
+        oscmsg.setAddress(item["cmd"][0]);
+        float min = (item["min"].is_null()) ? 0.0 : float(item["min"]);
+        float max = (item["max"].is_null()) ? 1.0 : float(item["max"]);
+        for (auto arg : vector<ofJson>(item["cmd"].begin() + 1, item["cmd"].end())) {
+            if(arg.is_string()) {
+                // channel, pitch, velocity, control, value, detlatime
+                if(arg == "channel") oscmsg.addFloatArg(ofMap(msg.channel, 0,127, min, max));
+                else if(arg == "pitch") oscmsg.addFloatArg(ofMap(msg.pitch, 0,127, min, max));
+                else if(arg == "velocity") oscmsg.addFloatArg(ofMap(msg.velocity, 0,127, min, max));
+                else if(arg == "control") oscmsg.addFloatArg(ofMap(msg.control, 0,127, min, max));
+                else if(arg == "value") oscmsg.addFloatArg(ofMap(msg.value, 0,127, min, max));
+                else if(arg == "deltatime") oscmsg.addFloatArg(ofMap(msg.deltatime, 0,127, min, max));
+                else oscmsg.addStringArg(arg);
+            } else if (arg.is_number()) {
+                oscmsg.addFloatArg(arg);
             }
         }
-        ofLogVerbose("midi")<<"Converted '"<<item<<"' to osc: "<<oscmsg;
+
+        ofLogVerbose("midi")<<"Converted '"<<item<<"' to osc: "<<oscmsg<<" min: "<<min<<" max: "<<max;
         oscmsgs.push_back(oscmsg);
     }
     return oscmsgs;
