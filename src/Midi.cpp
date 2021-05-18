@@ -172,16 +172,17 @@ vector<animatron::osc::Message> animatron::midi::getOscFromMidi(animatron::midi:
     ofLogVerbose("midi")<<"Converting midi msg to lowercase: "<<msg.getStatusString(msg.status);
     string status = ofToLower(msg.getStatusString(msg.status));
     vector<osc::Message> oscmsgs;
-    ofLogVerbose("midi")<<(*map)[status];
     for(auto & item : (*map)[status]) {
         animatron::osc::Message oscmsg;
         oscmsg.setAddress(item["cmd"][0]);
         float min = (item["min"].is_null()) ? 0.0 : float(item["min"]);
         float max = (item["max"].is_null()) ? 1.0 : float(item["max"]);
+        // interrupt if there are no arguments in the OSC command
+        if (item["cmd"] < 2) break;
         for (auto arg : vector<ofJson>(item["cmd"].begin() + 1, item["cmd"].end())) {
             if(arg.is_string()) {
                 // channel, pitch, velocity, control, value, detlatime
-                if(arg == "channel") oscmsg.addFloatArg(ofMap(msg.channel, 0,127, min, max));
+                if (arg == "channel") oscmsg.addFloatArg(ofMap(msg.channel, 0,127, min, max));
                 else if(arg == "pitch") oscmsg.addFloatArg(ofMap(msg.pitch, 0,127, min, max));
                 else if(arg == "velocity") oscmsg.addFloatArg(ofMap(msg.velocity, 0,127, min, max));
                 else if(arg == "control") oscmsg.addFloatArg(ofMap(msg.control, 0,127, min, max));
