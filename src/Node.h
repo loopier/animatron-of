@@ -66,6 +66,8 @@ void setTexture(string nodeName, string textureName);
 
 void play(string name);
 void play();
+/// \brief Plays the sequence in the INDEX of the comma-separated list of NAMES
+void playFromList(int index, string names);
 void reverse(string name);
 void reverse();
 void pause(string name);

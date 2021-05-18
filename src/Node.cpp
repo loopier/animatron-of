@@ -196,6 +196,8 @@ void animatron::node::play(string name) {
         textures[name]->play();
 //        textures[name]->setShouldLoop(true);
 //        ofLogVerbose()<<"playing: "<<textures[name]->isPlaying();
+    } else {
+        ofLogWarning("node")<<"Can't play node. Name not found: "<<name;
     }
 }
 
@@ -204,6 +206,12 @@ void animatron::node::play() {
     for(auto name : selectedNodes) {
         play(name);
     }
+}
+
+//------------------------------------------------------
+void animatron::node::playFromList(int index, string names) {
+    vector<string> elements = ofSplitString(names, ",", false, true);
+    play(elements[index]);
 }
 
 //------------------------------------------------------

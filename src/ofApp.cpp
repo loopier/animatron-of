@@ -51,6 +51,7 @@ void ofApp::setup(){
     // image sequence
     messageMap["/animation"] = &ofApp::loadImageSequence;
     messageMap["/play"] = &ofApp::playNodes;
+    messageMap["/playfrom"] = &ofApp::playNodesFromList;
     messageMap["/reverse"] = &ofApp::reverseNodes;
     messageMap["/pause"] = &ofApp::pauseNodes;
     messageMap["/stop"] = &ofApp::stopNodes;
@@ -341,6 +342,11 @@ void ofApp::playNodes(const animatron::osc::Message & msg) {
     } else {
         animatron::node::play();
     }
+}
+
+//--------------------------------------------------------------
+void ofApp::playNodesFromList(const animatron::osc::Message & msg) {
+   animatron::node::playFromList(msg.getArgAsInt(0), msg.getArgAsString(1));
 }
 
 //--------------------------------------------------------------

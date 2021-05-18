@@ -70,6 +70,7 @@ private:
     // IMAGE SEQUENCE -------------------------------------------------------
     void loadImageSequence(const animatron::osc::Message & msg);
     void playNodes(const animatron::osc::Message & msg);
+    void playNodesFromList(const animatron::osc::Message & msg);
     void reverseNodes(const animatron::osc::Message & msg);
     void pauseNodes(const animatron::osc::Message & msg);
     void stopNodes(const animatron::osc::Message & msg);
