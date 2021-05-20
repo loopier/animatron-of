@@ -87,6 +87,3 @@ int animatron::config::getMidiInPort() {
 string animatron::config::getMidiMapFilename() {
     return conf["midi"]["map file"];
 }
-
-//-------------------------------------------------------
-string getMidiMapFilename();
