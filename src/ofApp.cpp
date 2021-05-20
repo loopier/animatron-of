@@ -331,7 +331,9 @@ void ofApp::toggleOrthographicCamera(const animatron::osc::Message & msg) {
 //--------------------------------------------------------------
 void ofApp::loadImageSequence(const animatron::osc::Message & msg) {
 //    animatron::image::addSequence(msg.getArgAsString(0), msg.getArgAsString(1));
-    animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
+    bool ok = animatron::image::addSequence(msg.getArgAsString(1), animatron::config::getAppSupportPath() + "/imgs/" + msg.getArgAsString(1));
+    if (ok) animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
+    else animatron::node::setTexture(msg.getArgAsString(0), ofToDataPath("imgs/default"));
 }
 
 //--------------------------------------------------------------

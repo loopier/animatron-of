@@ -172,19 +172,10 @@ void animatron::node::setTexture(string nodeName, string textureName) {
     //		just of the pointers, but 'play' seems to affect all instances of the same
     //		type of ImageSequence.
     ofLogVerbose() << "Setting texture: '"<<textureName<<"' to node '"<<nodeName<<"'";
-//    textures[nodeName] = make_shared<image::ImageSequence>(image::ImageSequence(*image::getByName(textureName)));
-//    textures[nodeName] = make_shared<image::ImageSequence>(image::ImageSequence());
-//    *textures[nodeName] = *image::getByName(textureName);
-//    textures[nodeName] = make_shared<image::ImageSequence>(*image::getByName(textureName));
     image::ImageSequencePtr original = image::getByName(textureName);
     textures[nodeName] = make_shared<image::ImageSequence>(image::ImageSequence());
     *textures[nodeName] = *original;
     getByName(nodeName)->resizeToTexture(textures[nodeName]->getTextureForFrame(0));
-//    ofLogVerbose()<<"textures["<<nodeName<<"] = "<<typeid(textures[nodeName]).name();
-    // print memory allocations
-    ofLogVerbose()<<"original mem addr: "<<original.get();
-    ofLogVerbose()<<"node mem addr:     "<<textures[nodeName].get();
-//    printf("(%p, %p)\n", textures[nodeName].get(), image::getByName(textureName).get());
 }
 
 void animatron::node::play(string name) {

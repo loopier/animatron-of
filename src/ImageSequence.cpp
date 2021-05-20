@@ -2,7 +2,6 @@
 
 namespace  {
     animatron::image::ImageSequenceMap sequences;
-    string basepath = "imgs/";
 }
 
 //-------------------------------------------------------
@@ -40,24 +39,29 @@ void animatron::image::ImageSequence::setFrameRate(float rate) {
 //-------------------------------------------------------
 //	public interface
 //-------------------------------------------------------
-void animatron::image::addSequence(string name, string path) {
+bool animatron::image::addSequence(string name, string path) {
+    bool success = false;
     ImageSequencePtr sequence;
     if (exists(name)) {
         ofLogWarning()<<"Sequence '"<<name<<"' already exists.  Skipping.";
         sequence = getByName(name);
+        success = true;
     } else {
-        sequence = make_shared<ImageSequence>(ImageSequence());
-        sequences[name] = sequence;
-
-        string fullpath = basepath + path + "/";
-        ofLogVerbose()<<"directory: "<<ofDirectory(fullpath).exists();
-        if(ofDirectory(fullpath).exists()) {
-            sequence->loadSequence(fullpath);
+        if(ofDirectory(path).exists()) {
+            sequence = make_shared<ImageSequence>(ImageSequence());
+            sequences[name] = sequence;
+            sequence->loadSequence(path);
+            ofLogNotice()<<"Add sequence '"<<name<<"' from '"<<path<<"'";
+            success = true;
         } else {
-            sequence->loadSequence(basepath+"default");
+            ofLogError("image")<<"Sequence not found: "<<path;
+            success = false;
         }
-        ofLogNotice()<<"Add sequence '"<<name<<"' from '"<<fullpath<<"'";
+//        } else {
+//            sequence->loadSequence(ofToDataPath("default"));
+//        }
     }
+    return success;
 }
 
 //-------------------------------------------------------

@@ -37,7 +37,9 @@ typedef shared_ptr<ImageSequence>      ImageSequencePtr;
 typedef vector<ImageSequencePtr>         ImageSequenceList;
 typedef map<string, ImageSequencePtr>    ImageSequenceMap;
 
-void addSequence(string name, string path);
+/// \brief Add the sequence NAME, with file from PATH
+/// \return BOOL If it has succeded loading the sequence
+bool addSequence(string name, string path);
 void playSequence(string name);
 bool exists(string name);
 ImageSequencePtr getByName(string name);
