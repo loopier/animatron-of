@@ -6,6 +6,8 @@
 namespace animatron {
 namespace image {
 
+typedef shared_ptr<ofxImageSequence> ImageSequencePtr;
+
 // Extended the class instead of using
 //  typedef ofxImageSequencePlayback ImageSequence;
 // to expose some of the methods in ofxImageSequence that are not
@@ -15,10 +17,10 @@ namespace image {
 // In ofxImageSequencePlayback there's no way get the textures.
 // Textures are needed to use them as 3d mesh textures, binding
 // them to 3d primitives.
-class ImageSequence: public ofxImageSequencePlayback
+class ImageSequencePlayer: public ofxImageSequencePlayback
 {
 public:
-    ImageSequence();
+    ImageSequencePlayer();
 
     //returns the current frame
     ofTexture& getTextureForCurrentFrame();
@@ -33,16 +35,18 @@ public:
     void setFrameRate(float rate);
 };
 
-typedef shared_ptr<ImageSequence>      ImageSequencePtr;
-typedef vector<ImageSequencePtr>         ImageSequenceList;
-typedef map<string, ImageSequencePtr>    ImageSequenceMap;
+typedef shared_ptr<ImageSequencePlayer>      ImageSequencePlayerPtr;
+typedef vector<ImageSequencePlayerPtr>         ImageSequencePlayerList;
+typedef map<string, ImageSequencePlayerPtr>    ImageSequencePlayerMap;
 
 /// \brief Add the sequence NAME, with file from PATH
 /// \return BOOL If it has succeded loading the sequence
 bool addSequence(string name, string path);
 void playSequence(string name);
 bool exists(string name);
-ImageSequencePtr getByName(string name);
+
+/// \brief Return an image sequence player
+ImageSequencePlayerPtr getByName(string name);
 }
 }
 
