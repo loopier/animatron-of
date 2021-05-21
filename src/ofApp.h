@@ -46,6 +46,9 @@ private:
     void setMidiPort(const animatron::osc::Message & msg);
     void setMidiMap(const animatron::osc::Message & msg);
 
+    // CAM ------------------------------------------------------------------
+    void toggleOrthographicCamera(const animatron::osc::Message & msg);
+
     // NODES ------------------------------------------------------------------
     /// \brief list all the node names
     void listNodes(const animatron::osc::Message & msg);
@@ -58,17 +61,20 @@ private:
     void moveNodesTo(const animatron::osc::Message & msg);
     void rotateNodes(const animatron::osc::Message & msg);
     void scaleNodes(const animatron::osc::Message & msg);
-    void setTexture(const animatron::osc::Message & msg);
-    /// \brief create a new node with a name
+    /// \brief create a new node with an image sequence attached to it
     void newNode(const animatron::osc::Message & msg);
+    /// \brief create a new node with a name at a given position
+    void newNodeAt(const animatron::osc::Message & msg);
     /// \brief log node info
     void logNodeInfo(const animatron::osc::Message & msg);
 
-    // CAM ------------------------------------------------------------------
-    void toggleOrthographicCamera(const animatron::osc::Message & msg);
-
     // IMAGE SEQUENCE -------------------------------------------------------
-    void loadImageSequence(const animatron::osc::Message & msg);
+    /// \brief add an image sequence to the list of resources
+    /// An ImageSequencePlayer is needed to play them and a Node to display them.
+    void addImageSequence(const animatron::osc::Message & msg);
+    /// \brief load an image sequence to a node
+    void setTexture(const animatron::osc::Message & msg);
+//    void loadImageSequence(const animatron::osc::Message & msg);
     void playNodes(const animatron::osc::Message & msg);
     void playNodesFromList(const animatron::osc::Message & msg);
     void reverseNodes(const animatron::osc::Message & msg);

@@ -168,14 +168,13 @@ void animatron::node::setNodesTexture(string textureName) {
 
 //-------------------------------------------------------
 void animatron::node::setTexture(string nodeName, string textureName) {
-    // FIX: this is supposed to create different copies of the ImageSequence objects, not
-    //		just of the pointers, but 'play' seems to affect all instances of the same
-    //		type of ImageSequence.
-//    TODO: get an image sequence from the list and set it to the player
-    ofLogVerbose() << "Setting texture: '"<<textureName<<"' to node '"<<nodeName<<"'";
-    image::ImageSequencePlayerPtr original = image::getByName(textureName);
-    textures[nodeName] = make_shared<image::ImageSequencePlayer>(image::ImageSequencePlayer());
-    *textures[nodeName] = *original;
+    if (textures.count(nodeName)) {
+        ofLogVerbose("node") << "Setting texture: '"<<textureName<<"' to node '"<<nodeName<<"'";
+    } else {
+        ofLogVerbose("node") << "Creating texture: '"<<textureName<<"' for node '"<<nodeName<<"'";
+        textures[nodeName] = make_shared<image::ImageSequencePlayer>();
+    }
+    textures[nodeName]->setSequence(*image::getImageSequenceByName(textureName));
     getByName(nodeName)->resizeToTexture(textures[nodeName]->getTextureForFrame(0));
 }
 

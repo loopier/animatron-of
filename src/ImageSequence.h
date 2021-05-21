@@ -6,7 +6,10 @@
 namespace animatron {
 namespace image {
 
-typedef shared_ptr<ofxImageSequence> ImageSequencePtr;
+typedef ofxImageSequence ImageSequence;
+typedef shared_ptr<ImageSequence> ImageSequencePtr;
+typedef vector<ImageSequencePtr> ImageSequenceList;
+typedef map<string, ImageSequencePtr> ImageSequenceMap;
 
 // Extended the class instead of using
 //  typedef ofxImageSequencePlayback ImageSequence;
@@ -39,14 +42,24 @@ typedef shared_ptr<ImageSequencePlayer>      ImageSequencePlayerPtr;
 typedef vector<ImageSequencePlayerPtr>         ImageSequencePlayerList;
 typedef map<string, ImageSequencePlayerPtr>    ImageSequencePlayerMap;
 
-/// \brief Add the sequence NAME, with file from PATH
-/// \return BOOL If it has succeded loading the sequence
+/// \brief Add the sequence NAME, with file from PATH.
+/// \return BOOL If it has succeded loading the sequence.
+bool addSequence(string name);
 bool addSequence(string name, string path);
+/// \brief Add a sequence with files from PATH named after the directory.
+bool addSequenceFromPath(string path);
 void playSequence(string name);
 bool exists(string name);
+/// \brief Return the list of available sequences.
+vector<string> getListOfSequences();
+vector<string> getListOfSequencePlayers();
+void printListOfSequences();
+void printListOfSequencePlayers();
 
+/// \brief Return an image sequence
+ImageSequencePtr getImageSequenceByName(string name);
 /// \brief Return an image sequence player
-ImageSequencePlayerPtr getByName(string name);
+ImageSequencePlayerPtr getImageSequencePlayerByName(string name);
 }
 }
 

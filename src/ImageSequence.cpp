@@ -1,7 +1,8 @@
 #include "ImageSequence.h"
 
 namespace  {
-    animatron::image::ImageSequencePlayerMap sequences;
+    animatron::image::ImageSequenceMap sequences;
+    animatron::image::ImageSequencePlayerMap players;
 }
 
 //-------------------------------------------------------
@@ -39,54 +40,107 @@ void animatron::image::ImageSequencePlayer::setFrameRate(float rate) {
 //-------------------------------------------------------
 //	public interface
 //-------------------------------------------------------
+bool animatron::image::addSequence(string name) {
+    return addSequence(name, name);
+}
+
 bool animatron::image::addSequence(string name, string path) {
-    bool success = false;
-    ImageSequencePlayerPtr sequence;
+    bool isSuccessful = false;
+    ImageSequencePtr sequence;
     if (exists(name)) {
-        ofLogWarning()<<"Sequence '"<<name<<"' already exists.  Skipping.";
-        sequence = getByName(name);
-        success = true;
+        ofLogWarning("image")<<"Sequence '"<<name<<"' already exists.  Skipping.";
+        sequence = getImageSequenceByName(name);
+        isSuccessful = true;
     } else {
         if(ofDirectory(path).exists()) {
-            sequence = make_shared<ImageSequencePlayer>(ImageSequencePlayer());
+            sequence = make_shared<ImageSequence>();
             sequences[name] = sequence;
             sequence->loadSequence(path);
-            ofLogNotice()<<"Add sequence '"<<name<<"' from '"<<path<<"'";
-            success = true;
+            ofLogNotice("image")<<"Add sequence '"<<name<<"' from '"<<path<<"'";
+            isSuccessful = true;
         } else {
             ofLogError("image")<<"Sequence not found: "<<path;
-            success = false;
+            isSuccessful = false;
         }
-//        } else {
-//            sequence->loadSequence(ofToDataPath("default"));
-//        }
     }
-    return success;
+    printListOfSequences();
+    return isSuccessful;
+}
+
+//-------------------------------------------------------
+bool animatron::image::addSequenceFromPath(string path) {
+    return addSequence(ofFilePath().getFileName(path), path);
 }
 
 //-------------------------------------------------------
 void animatron::image::playSequence(string name) {
     ImageSequencePlayerPtr sequence;
     if(exists(name)) {
-        sequences[name]->play();
+        players[name]->play();
     }
 }
 
 //-------------------------------------------------------
 bool animatron::image::exists(string name) {
-    return sequences.count(name);
+    return players.count(name);
 }
 
 //-------------------------------------------------------
-animatron::image::ImageSequencePlayerPtr animatron::image::getByName(string name) {
-    ImageSequencePlayerPtr sequence;
-    if(exists(name)) {
-        sequence = sequences.find(name)->second;
+vector<string> animatron::image::getListOfSequences() {
+    vector<string> names;
+    for (auto seq : sequences) {
+        names.push_back(seq.first);
+    }
+    return names;
+
+}
+
+//-------------------------------------------------------
+vector<string> animatron::image::getListOfSequencePlayers() {
+    vector<string> names;
+    for (auto player : players) {
+        names.push_back(player.first);
+    }
+    return names;
+}
+
+//-------------------------------------------------------
+void animatron::image::printListOfSequences() {
+    ofLogVerbose("image")<<"Sequences: ";
+    for (auto item : sequences) {
+        ofLogVerbose("image")<<"sequence: "<<item.first;
+    }
+}
+
+//-------------------------------------------------------
+void animatron::image::printListOfSequencePlayers() {
+    ofLogVerbose("image")<<"Sequences: ";
+    for (auto item : players) {
+        ofLogVerbose("image")<<"player: "<<item.first;
+    }
+}
+
+//-------------------------------------------------------
+animatron::image::ImageSequencePtr animatron::image::getImageSequenceByName(string name) {
+    ImageSequencePtr sequence;
+    if (sequences.count(name)) {
+        sequence = sequences[name];
     } else {
-        ofLogVerbose()<<"Image sequence not found: "<<name;
-//        addSequence(name, imgsPath+"default");
-        addSequence(name, name);
-        sequence = sequences.find(name)->second;
+        ofLogWarning("imagesequence")<<"Sequence not found: "<<name;
+        sequence = sequences["default"];
     }
     return sequence;
+}
+
+//-------------------------------------------------------
+animatron::image::ImageSequencePlayerPtr animatron::image::getImageSequencePlayerByName(string name) {
+    ImageSequencePlayerPtr player;
+    if(exists(name)) {
+        player = players[name];
+    } else {
+        ofLogWarning("imagesequence")<<"Player not found: "<<name;
+        addSequence(name, name);
+        player = players.find(name)->second;
+    }
+    return player;
 }

@@ -20,12 +20,12 @@ void ofApp::setup(){
                 this);
     midimap = animatron::midi::getMidiMap();
 
-    // setup OSC mapper
+    // setup OSC mapper -----------------------------------------------------
     osc.setup(animatron::config::getOscListenPort(),
               animatron::config::getOscRemoteIp(),
               animatron::config::getOscRemotePort());
     ofAddListener(osc.newOscMessageEvent, this, &ofApp::mapMessageToFunc);
-    // app
+    // app ------------------------------------------------------------------
     messageMap["/help"] = &ofApp::help;
     messageMap["/verbose"] = &ofApp::verbose;
     messageMap["/silent"] = &ofApp::silent;
@@ -33,8 +33,11 @@ void ofApp::setup(){
     messageMap["/midiports"] = &ofApp::listMidiPorts;
     messageMap["/midiport"] = &ofApp::setMidiPort;
     messageMap["/midimap"] = &ofApp::setMidiMap;
-    // node
+    // 3d cam ---------------------------------------------------------------
+    messageMap["/ortho"] = &ofApp::toggleOrthographicCamera;
+    // node -----------------------------------------------------------------
     messageMap["/new"] = &ofApp::newNode;
+    messageMap["/newat"] = &ofApp::newNodeAt;
     messageMap["/remove"] = &ofApp::removeNodes;
     messageMap["/list"] = &ofApp::listNodes;
     messageMap["/selected"] = &ofApp::listSelectedNodes;
@@ -45,11 +48,9 @@ void ofApp::setup(){
     messageMap["/moveto"] = &ofApp::moveNodesTo;
     messageMap["/rotate"] = &ofApp::rotateNodes;
     messageMap["/scale"] = &ofApp::scaleNodes;
-    messageMap["/settexture"] = &ofApp::setTexture;
-    // 3d cam
-    messageMap["/ortho"] = &ofApp::toggleOrthographicCamera;
-    // image sequence
-    messageMap["/animation"] = &ofApp::loadImageSequence;
+    // image sequence -------------------------------------------------------
+    messageMap["/sequence"] = &ofApp::addImageSequence;
+    messageMap["/texture"] = &ofApp::setTexture;
     messageMap["/play"] = &ofApp::playNodes;
     messageMap["/playfrom"] = &ofApp::playNodesFromList;
     messageMap["/reverse"] = &ofApp::reverseNodes;
@@ -248,7 +249,7 @@ void ofApp::moveNodes(const animatron::osc::Message & msg) {
     } else if(msg.getNumArgs() == 3) {
         animatron::node::move(msg.getArgAsString(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
     } else {
-        ofLogError()<<"Wrong number of arguments.  Expected 2 or 3.  Given: "<<msg.getNumArgs();
+        ofLogError("osc")<<"Wrong number of arguments.  Expected 2 or 3.  Given: "<<msg.getNumArgs();
     }
 }
 
@@ -259,7 +260,7 @@ void ofApp::moveNodesTo(const animatron::osc::Message & msg) {
     } else if(msg.getNumArgs() == 3) {
         animatron::node::moveTo(msg.getArgAsString(0), msg.getArgAsFloat(1), msg.getArgAsFloat(2));
     } else {
-        ofLogError()<<"Wrong number of arguments.  Expected 2 or 3.  Given: "<<msg.getNumArgs();
+        ofLogError("osc")<<"Wrong number of arguments.  Expected 2 or 3.  Given: "<<msg.getNumArgs();
     }
 }
 
@@ -270,7 +271,7 @@ void ofApp::rotateNodes(const animatron::osc::Message &msg) {
     } else if(msg.getNumArgs() == 2) {
         animatron::node::rotate(msg.getArgAsString(0), msg.getArgAsFloat(1));
     } else {
-        ofLogError()<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
+        ofLogError("osc")<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
     }
 }
 
@@ -281,7 +282,7 @@ void ofApp::scaleNodes(const animatron::osc::Message &msg) {
     } else if(msg.getNumArgs() == 2) {
         animatron::node::scale(msg.getArgAsString(0), msg.getArgAsFloat(1));
     } else {
-        ofLogError()<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
+        ofLogError("osc")<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
     }
 }
 
@@ -292,22 +293,41 @@ void ofApp::setTexture(const animatron::osc::Message &msg) {
     } else if(msg.getNumArgs() == 2) {
         animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
     } else {
-        ofLogError()<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
+        ofLogError("osc")<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::newNode(const animatron::osc::Message & msg) {
     if(msg.getNumArgs() == 1) {
-//        animatron::node::create(msg.getArgAsString(0), ofRandom(1.0), ofRandom(1.0));
+        animatron::image::addSequenceFromPath(animatron::config::getAppSupportPath()+"/imgs/"+msg.getArgAsString(0));
         animatron::node::create(msg.getArgAsString(0));
+        animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(0));
+    } else if (msg.getNumArgs() == 2) {
+        animatron::image::addSequenceFromPath(animatron::config::getAppSupportPath()+"/imgs/"+msg.getArgAsString(1));
+        animatron::node::create(msg.getArgAsString(0));
+        animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
+    } else {
+        ofLogError("osc")<<"Wrong number of arguments.  Expected 1 or 2.  Given: "<<msg.getNumArgs();
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::newNodeAt(const animatron::osc::Message & msg) {
+    if (msg.getNumArgs() == 3) {
+        animatron::node::create(
+                    msg.getArgAsString(0),
+                    msg.getArgAsFloat(1),
+                    msg.getArgAsFloat(2));
+        animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(0));
     } else if (msg.getNumArgs() == 3) {
         animatron::node::create(
                     msg.getArgAsString(0),
                     msg.getArgAsFloat(1),
                     msg.getArgAsFloat(2));
+        animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(3));
     } else {
-        ofLogError()<<"Wrong number of arguments.  Expected 1 or 3.  Given: "<<msg.getNumArgs();
+        ofLogError("osc")<<"Wrong number of arguments.  Expected 3 or 4.  Given: "<<msg.getNumArgs();
     }
 }
 
@@ -329,12 +349,20 @@ void ofApp::toggleOrthographicCamera(const animatron::osc::Message & msg) {
 }
 
 //--------------------------------------------------------------
-void ofApp::loadImageSequence(const animatron::osc::Message & msg) {
-//    animatron::image::addSequence(msg.getArgAsString(0), msg.getArgAsString(1));
-    bool ok = animatron::image::addSequence(msg.getArgAsString(1), animatron::config::getAppSupportPath() + "/imgs/" + msg.getArgAsString(1));
-    if (ok) animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
-    else animatron::node::setTexture(msg.getArgAsString(0), ofToDataPath("imgs/default"));
+void ofApp::addImageSequence(const animatron::osc::Message & msg) {
+    animatron::image::addSequenceFromPath(animatron::config::getAppSupportPath() + "/imgs/" + msg.getArgAsString(1));
+//    bool ok = animatron::image::addSequence(msg.getArgAsString(1), animatron::config::getAppSupportPath() + "/imgs/" + msg.getArgAsString(1));
+    // set sequence to player
+//    if (ok) animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
 }
+
+//--------------------------------------------------------------
+//void ofApp::loadImageSequence(const animatron::osc::Message & msg) {
+//    // arg(0) is node name, arg(1) is sequence name
+//    bool ok = animatron::image::addSequence(msg.getArgAsString(1), animatron::config::getAppSupportPath() + "/imgs/" + msg.getArgAsString(1));
+//    if (ok) animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
+////    else animatron::node::setTexture(msg.getArgAsString(0), ofToDataPath("imgs/default"));
+//}
 
 //--------------------------------------------------------------
 void ofApp::playNodes(const animatron::osc::Message & msg) {
