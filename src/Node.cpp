@@ -180,13 +180,8 @@ void animatron::node::setTexture(string nodeName, string textureName) {
 
 void animatron::node::play(string name) {
     ofLogVerbose()<<"play: "<<name;
-//    ofLogVerbose()<<"node exists: "<<name<<" "<<exists(name);
-//    ofLogVerbose()<<"img exists: "<<name<<" "<<image::exists(name);
-//    ofLogVerbose()<<"texture exists: "<<textures.count(name);
     if(textures.count(name) > 0) {
         textures[name]->play();
-//        textures[name]->setShouldLoop(true);
-//        ofLogVerbose()<<"playing: "<<textures[name]->isPlaying();
     } else {
         ofLogWarning("node")<<"Can't play node. Name not found: "<<name;
     }

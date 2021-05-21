@@ -351,9 +351,6 @@ void ofApp::toggleOrthographicCamera(const animatron::osc::Message & msg) {
 //--------------------------------------------------------------
 void ofApp::addImageSequence(const animatron::osc::Message & msg) {
     animatron::image::addSequenceFromPath(animatron::config::getAppSupportPath() + "/imgs/" + msg.getArgAsString(1));
-//    bool ok = animatron::image::addSequence(msg.getArgAsString(1), animatron::config::getAppSupportPath() + "/imgs/" + msg.getArgAsString(1));
-    // set sequence to player
-//    if (ok) animatron::node::setTexture(msg.getArgAsString(0), msg.getArgAsString(1));
 }
 
 //--------------------------------------------------------------

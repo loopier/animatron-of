@@ -63,7 +63,6 @@ bool animatron::image::addSequence(string name, string path) {
             isSuccessful = false;
         }
     }
-    printListOfSequences();
     return isSuccessful;
 }
 
